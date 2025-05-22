@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Image from 'next/image';
+import ProductImage from '@/components/ProductImage';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import Header from '@/components/Header';
@@ -86,13 +86,12 @@ export default function ProductDetail() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Product Image */}
-          <div className="relative h-80 md:h-96 rounded-lg overflow-hidden">
-            <Image 
+          <div className="h-80 md:h-96 rounded-lg overflow-hidden" style={{ height: '24rem' }}>
+            <ProductImage 
               src={product.image} 
               alt={product.name} 
-              fill
-              style={{ objectFit: 'cover' }}
               priority
+              className="rounded-lg"
             />
           </div>
           

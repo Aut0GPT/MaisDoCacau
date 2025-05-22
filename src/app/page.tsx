@@ -1,7 +1,8 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import Image from 'next/image';
+import HeroImage from '@/components/HeroImage';
+import ProductImage from '@/components/ProductImage';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -35,12 +36,10 @@ export default function Home() {
               {t('categories.all')}
             </Link>
           </div>
-          <div className="absolute inset-0 bg-black">
-            <Image 
+          <div className="absolute inset-0 bg-black" style={{ height: '100%' }}>
+            <HeroImage 
               src="/images/hero-cacau.jpg" 
               alt="Mais do Cacau" 
-              fill
-              style={{ objectFit: 'cover' }}
               priority
             />
           </div>
@@ -86,12 +85,11 @@ export default function Home() {
         Da escolha dos frutos ao cuidado no preparo, buscamos sempre inovar sem perder a essência do sabor autêntico. Experimente nossos produtos e descubra o verdadeiro prazer do cacau!
       </p>
     </div>
-    <div className="md:w-1/2 relative h-60 md:h-80 w-full rounded-lg overflow-hidden">
-      <Image 
+    <div className="md:w-1/2 h-60 md:h-80 w-full rounded-lg overflow-hidden" style={{ height: '20rem' }}>
+      <ProductImage 
         src="/images/story-image.jpg" 
         alt="Nossa História" 
-        fill
-        style={{ objectFit: 'cover' }}
+        className="rounded-lg"
       />
     </div>
   </div>

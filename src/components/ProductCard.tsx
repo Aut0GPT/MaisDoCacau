@@ -1,8 +1,7 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import ProductImage from './ProductImage';
 
 export interface Product {
   id: string;
@@ -23,7 +22,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, onAddToCart }: ProductCardProps) {
-  const [isLoading, setIsLoading] = useState(true);
+  // No need for loading state as it's handled by ProductImage
   
   const handleAddToCart = () => {
     if (onAddToCart) {
@@ -34,20 +33,12 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
   return (
     <div className={`bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02] border-2 ${product.featured ? 'border-yellow-400' : 'border-transparent'}`}>
       <Link href={`/product/${product.id}`}>
-        <div className="relative h-48 w-full">
-          <Image
+        <div className="h-48 w-full" style={{ height: '12rem' }}>
+          <ProductImage
             src={product.image}
             alt={product.name}
-            fill
-            style={{ objectFit: 'cover' }}
-            className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
-            onLoadingComplete={() => setIsLoading(false)}
+            className="rounded-t-lg"
           />
-          {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-amber-100">
-              <div className="w-8 h-8 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          )}
         </div>
         <div className="p-4 flex flex-col gap-2">
           <h3 className="text-lg font-semibold text-[var(--color-primary)] mb-1 line-clamp-2">{product.name}</h3>
