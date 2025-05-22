@@ -1,101 +1,77 @@
 'use client';
 
-import { useTranslation } from 'react-i18next';
-import HeroImage from '@/components/HeroImage';
-import ProductImage from '@/components/ProductImage';
-import Link from 'next/link';
+// Import basic components and data
+import { products } from '@/data/products';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import ProductCard, { Product } from '@/components/ProductCard';
-import { useCart } from '@/context/CartContext';
-import { toast } from 'react-toastify';
-import { getFeaturedProducts, getNewProducts } from '@/data/products';
+import Link from 'next/link';
 
 export default function Home() {
-  const { t } = useTranslation();
-  const { addToCart } = useCart();
-  
-  // Get featured and new products from our data
-  const featuredProducts = getFeaturedProducts();
-  const newArrivals = getNewProducts();
-
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       
-      <main className="flex-grow container mx-auto px-4 py-6 pb-20 overflow-y-auto">
-        {/* Hero Section */}
-        <section className="relative h-80 mb-8 rounded-lg overflow-hidden">
-          <div className="absolute inset-0 bg-[var(--color-primary)] bg-opacity-60 flex flex-col justify-center items-center text-white z-10 p-6 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('home.title')}</h1>
-            <p className="text-xl md:text-2xl">{t('home.subtitle')}</p>
-            <Link 
-              href="/category/all" 
-              className="mt-6 px-6 py-3 bg-[var(--color-accent)] hover:bg-opacity-90 text-[var(--color-primary)] font-bold rounded-md transition-colors"
+      <main style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto', flex: '1' }}>
+        <h1 style={{ color: '#6b4226', fontSize: '32px', marginBottom: '20px' }}>Mais do Cacau</h1>
+        
+        <div style={{ backgroundColor: '#6b4226', color: 'white', padding: '40px', borderRadius: '8px', marginBottom: '30px', textAlign: 'center' }}>
+          <h2 style={{ fontSize: '28px', marginBottom: '15px' }}>Produtos artesanais e gourmet de cacau</h2>
+          <p style={{ fontSize: '18px' }}>Descubra delícias à base de cacau</p>
+        </div>
+
+        <h2 style={{ color: '#6b4226', fontSize: '24px', marginBottom: '20px' }}>Nossos Produtos</h2>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px', marginBottom: '30px' }}>
+          {products.slice(0, 8).map(product => (
+            <div key={product.id} style={{ border: '1px solid #e0e0e0', borderRadius: '8px', overflow: 'hidden', backgroundColor: 'white', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }} 
+              onClick={() => window.location.href = `/product/${product.id}`}
             >
-              {t('categories.all')}
-            </Link>
-          </div>
-          <div className="absolute inset-0 bg-black" style={{ height: '100%' }}>
-            <HeroImage 
-              src="/images/hero-cacau.jpg" 
-              alt="Mais do Cacau" 
-              priority
-            />
-          </div>
-        </section>
+              <div style={{ height: '200px', backgroundColor: '#f9f5eb', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px', position: 'relative' }}>
+                {/* Use the mapped image path */}
+                <img 
+                  src={product.image} 
+                  alt={product.name}
+                  style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                  onError={(e) => {
+                    // If image fails, show a placeholder
+                    console.log(`Image failed to load: ${product.image}`);
+                    const imgElement = e.target as HTMLImageElement;
+                    imgElement.src = 'https://via.placeholder.com/200x200?text=Mais+do+Cacau';
+                  }}
+                />
+              </div>
+              <div style={{ padding: '15px' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#6b4226', marginBottom: '10px' }}>{product.name}</h3>
+                <p style={{ fontWeight: 'bold', color: '#8b5d33', fontSize: '16px', marginBottom: '8px' }}>R$ {product.price.toFixed(2)}</p>
+                <p style={{ fontSize: '14px', color: '#666', marginBottom: '10px', height: '40px', overflow: 'hidden' }}>
+                  {product.description.substring(0, 80)}...
+                </p>
+                <p style={{ fontSize: '13px', color: '#888', marginBottom: '15px' }}>
+                  {product.weight} • {product.category}
+                  {product.containsAlcohol && <span style={{ color: 'red', marginLeft: '5px' }}>• +18</span>}
+                </p>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button style={{ flex: '1', padding: '8px', backgroundColor: '#6b4226', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                    Adicionar ao Carrinho
+                  </button>
+                  <Link href={`/product/${product.id}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', backgroundColor: '#f3f4f6', color: '#6b4226', border: 'none', borderRadius: '4px', cursor: 'pointer', textDecoration: 'none', fontWeight: 'bold' }}>
+                    Ver Detalhes
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
-        {/* Featured Products */}
-        <section className="mb-12 bg-white p-6 rounded-lg shadow">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6">{t('home.featuredProducts')}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 gap-y-8">
-            {featuredProducts.map((product: Product) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                onAddToCart={() => { addToCart(product); toast.success('Adicionado ao carrinho!'); }}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* New Arrivals */}
-        <section className="mb-12 bg-amber-50 p-6 rounded-lg shadow">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6">{t('home.newArrivals')}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 gap-y-8">
-            {newArrivals.map((product: Product) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                onAddToCart={() => { addToCart(product); toast.success('Adicionado ao carrinho!'); }}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* Our Story */}
-        <section className="mb-16 bg-amber-100 p-8 rounded-lg shadow-md">
-  <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[var(--color-primary)]">{t('home.ourStory')}</h2>
-  <div className="flex flex-col md:flex-row items-center gap-8">
-    <div className="md:w-1/2">
-      <p className="text-lg mb-4">
-        Mais do Cacau é uma empresa familiar dedicada à produção artesanal de produtos derivados do cacau, valorizando a qualidade e a tradição. Nossa missão é levar o melhor do cacau baiano para a sua mesa, com respeito à natureza e às pessoas envolvidas em cada etapa do processo.
-      </p>
-      <p className="text-lg">
-        Da escolha dos frutos ao cuidado no preparo, buscamos sempre inovar sem perder a essência do sabor autêntico. Experimente nossos produtos e descubra o verdadeiro prazer do cacau!
-      </p>
-    </div>
-    <div className="md:w-1/2 h-60 md:h-80 w-full rounded-lg overflow-hidden" style={{ height: '20rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <ProductImage 
-        src="/images/story-image.jpg" 
-        alt="Nossa História" 
-        className="rounded-lg"
-      />
-    </div>
-  </div>
-</section>
+        <div style={{ backgroundColor: '#f9f5eb', padding: '30px', borderRadius: '8px' }}>
+          <h2 style={{ color: '#6b4226', fontSize: '24px', marginBottom: '20px' }}>Nossa História</h2>
+          <p style={{ marginBottom: '15px' }}>
+            Mais do Cacau é uma empresa familiar dedicada à produção artesanal de produtos derivados do cacau, valorizando a qualidade e a tradição. 
+            Nossa missão é levar o melhor do cacau baiano para a sua mesa, com respeito à natureza e às pessoas envolvidas em cada etapa do processo.
+          </p>
+        </div>
       </main>
-
+      
       <Footer />
     </div>
   );

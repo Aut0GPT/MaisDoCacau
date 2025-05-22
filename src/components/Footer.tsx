@@ -2,21 +2,38 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useCart } from '@/context/CartContext';
 
 export default function Footer() {
   const pathname = usePathname();
-  const { totalItems } = useCart();
   
   return (
-    <footer className="fixed bottom-0 left-0 right-0 bg-[var(--color-primary)] text-white z-10 shadow-lg">
-      <div className="w-full max-w-screen-xl mx-auto px-4">
-        <div className="flex justify-between items-center h-16 md:h-14">
+    <footer style={{ 
+      position: 'fixed', 
+      bottom: 0, 
+      left: 0, 
+      right: 0, 
+      backgroundColor: '#6b4226', 
+      color: 'white', 
+      zIndex: 10, 
+      boxShadow: '0 -2px 10px rgba(0,0,0,0.1)' 
+    }}>
+      <div style={{ 
+        width: '100%', 
+        maxWidth: '1200px', 
+        margin: '0 auto', 
+        padding: '0 16px' 
+      }}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          height: '60px' 
+        }}>
           <NavItem 
             href="/" 
             label="Início" 
             icon={
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ width: '24px', height: '24px' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
             } 
@@ -27,7 +44,7 @@ export default function Footer() {
             href="/category/all" 
             label="Produtos" 
             icon={
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ width: '24px', height: '24px' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
             } 
@@ -38,14 +55,9 @@ export default function Footer() {
             href="/cart" 
             label="Carrinho" 
             icon={
-              <div className="relative">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                {totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow">{totalItems}</span>
-                )}
-              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ width: '24px', height: '24px' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
             } 
             isActive={pathname === '/cart'}
           />
@@ -54,7 +66,7 @@ export default function Footer() {
             href="/account" 
             label="Conta" 
             icon={
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ width: '24px', height: '24px' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             } 
@@ -80,12 +92,21 @@ function NavItem({
   return (
     <Link 
       href={href} 
-      className={`flex flex-col items-center justify-center w-1/4 py-2 ${isActive ? 'text-[var(--color-accent)]' : 'text-white hover:text-gray-200'}`}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '25%',
+        padding: '8px 0',
+        color: isActive ? '#f8c05a' : 'white',
+        textDecoration: 'none'
+      }}
     >
-      <div className="flex items-center justify-center h-6">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '24px' }}>
         {icon}
       </div>
-      <span className="text-xs mt-1 text-center font-medium">{label}</span>
+      <span style={{ fontSize: '12px', marginTop: '4px', textAlign: 'center', fontWeight: 500 }}>{label}</span>
     </Link>
   );
 }

@@ -1,6 +1,3 @@
-import { auth } from '@/auth';
-import ClientProviders from '@/providers';
-import '@worldcoin/mini-apps-ui-kit-react/styles.css';
 import type { Metadata } from 'next';
 import { Poppins, Playfair_Display } from 'next/font/google';
 import './globals.css';
@@ -24,16 +21,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
   return (
     <html lang="en">
       <body className={`${poppins.variable} ${playfair.variable} font-sans bg-amber-50`}>
-        <ClientProviders session={session}>{children}</ClientProviders>
+        {children}
       </body>
     </html>
   );

@@ -1,23 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import ProductImage from '@/components/ProductImage';
-import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AgeGate from '@/components/AgeGate';
-import { useCart } from '@/context/CartContext';
-import { toast } from 'react-toastify';
 import { getProductById } from '@/data/products';
 
 export default function ProductDetail() {
-  const { t } = useTranslation();
   const params = useParams();
-  const { addToCart } = useCart();
-  const [showAgeGate, setShowAgeGate] = useState(false);
-  const [ageVerified, setAgeVerified] = useState(false);
   const [quantity, setQuantity] = useState(1);
   
   const productId = params.id as string;
@@ -27,12 +18,12 @@ export default function ProductDetail() {
     return (
       <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="flex-grow container mx-auto px-4 py-6 flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">Produto não encontrado</h1>
+        <main style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto', flex: '1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ textAlign: 'center' }}>
+            <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#6b4226' }}>Produto não encontrado</h1>
             <Link 
               href="/" 
-              className="text-[var(--color-primary)] hover:text-[var(--color-secondary)]"
+              style={{ color: '#6b4226', textDecoration: 'underline' }}
             >
               Voltar para a página inicial
             </Link>
@@ -43,80 +34,63 @@ export default function ProductDetail() {
     );
   }
   
+  // Function to handle adding to cart (simplified for now)
   const handleAddToCart = () => {
-    if (product.containsAlcohol && !ageVerified) {
-      setShowAgeGate(true);
-      return;
-    }
-    
-    // Add to cart with the selected quantity
-    for (let i = 0; i < quantity; i++) {
-      addToCart(product);
-    }
-    toast.success('Adicionado ao carrinho!');
-  };
-  
-  const handleAgeVerified = () => {
-    setAgeVerified(true);
-    setShowAgeGate(false);
-    
-    // Add to cart after age verification
-    for (let i = 0; i < quantity; i++) {
-      addToCart(product);
-    }
-    toast.success('Adicionado ao carrinho!');
+    alert(`Produto ${product.name} adicionado ao carrinho! (${quantity} unidades)`);
   };
   
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       
-      <main className="flex-grow container mx-auto px-4 py-6 overflow-y-auto">
-        <div className="mb-4">
+      <main style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto', flex: '1' }}>
+        <div style={{ marginBottom: '16px' }}>
           <Link 
             href="/" 
-            className="text-[var(--color-primary)] hover:text-[var(--color-secondary)] flex items-center"
+            style={{ color: '#6b4226', display: 'flex', alignItems: 'center' }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-4 h-4 mr-1">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Voltar
+            ← Voltar
           </Link>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '32px', marginBottom: '32px' }}>
           {/* Product Image */}
-          <div className="h-80 md:h-96 rounded-lg overflow-hidden" style={{ height: '24rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ProductImage 
+          <div style={{ height: '300px', backgroundColor: '#f9f5eb', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', position: 'relative' }}>
+            <img 
               src={product.image} 
               alt={product.name} 
-              priority
-              className="rounded-lg"
+              style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+              onError={(e) => {
+                // If image fails, show a placeholder
+                console.log(`Image failed to load: ${product.image}`);
+                const imgElement = e.target as HTMLImageElement;
+                imgElement.src = 'https://via.placeholder.com/300x300?text=Mais+do+Cacau';
+              }}
             />
           </div>
           
           {/* Product Info */}
-          <div>
-            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+          <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+            <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#6b4226', marginBottom: '8px' }}>{product.name}</h1>
             
             {product.containsAlcohol && (
-              <div className="mb-4 inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">
-                +18 {t('product.ageRequired')}
+              <div style={{ display: 'inline-block', backgroundColor: '#fee2e2', color: '#b91c1c', padding: '4px 12px', borderRadius: '9999px', fontSize: '14px', marginBottom: '16px' }}>
+                +18 Produto alcoólico - Venda proibida para menores
               </div>
             )}
             
-            <p className="text-2xl font-bold text-[var(--color-primary)] mb-4">
+            <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#8b5d33', marginBottom: '16px' }}>
               R$ {product.price.toFixed(2)}
             </p>
             
-            <div className="mb-6">
-              <label htmlFor="quantity" className="block mb-2 font-medium">
-                {t('cart.quantity')}:
+            <div style={{ marginBottom: '24px' }}>
+              <label htmlFor="quantity" style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
+                Quantidade:
               </label>
-              <div className="flex items-center">
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 <button 
                   onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-                  className="w-10 h-10 bg-gray-200 rounded-l-md flex items-center justify-center"
+                  style={{ width: '40px', height: '40px', backgroundColor: '#f3f4f6', borderRadius: '4px 0 0 4px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', border: 'none' }}
                 >
                   -
                 </button>
@@ -125,49 +99,45 @@ export default function ProductDetail() {
                   id="quantity" 
                   value={quantity} 
                   onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                  style={{ width: '64px', height: '40px', border: '1px solid #f3f4f6', textAlign: 'center' }}
                   min="1"
-                  className="w-16 h-10 border-y border-gray-200 text-center"
                 />
                 <button 
                   onClick={() => setQuantity(prev => prev + 1)}
-                  className="w-10 h-10 bg-gray-200 rounded-r-md flex items-center justify-center"
+                  style={{ width: '40px', height: '40px', backgroundColor: '#f3f4f6', borderRadius: '0 4px 4px 0', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', border: 'none' }}
                 >
                   +
                 </button>
               </div>
             </div>
             
-            <button
+            <button 
               onClick={handleAddToCart}
-              className="w-full py-3 bg-[var(--color-primary)] hover:bg-[var(--color-secondary)] text-white rounded-md transition-colors mb-4"
+              style={{ width: '100%', padding: '12px', backgroundColor: '#6b4226', color: 'white', borderRadius: '4px', fontWeight: 'bold', fontSize: '18px', marginBottom: '24px', border: 'none', cursor: 'pointer' }}
             >
-              {t('product.addToCart')}
+              Adicionar ao Carrinho
             </button>
             
-            <div className="mt-8">
-              <h2 className="text-xl font-bold mb-2">{t('product.ingredients')}</h2>
-              <p className="text-gray-700 mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris.
-              </p>
-              
-              <h2 className="text-xl font-bold mb-2">{t('product.origin')}</h2>
-              <p className="text-gray-700">
-                Bahia, Brasil
-              </p>
+            <div style={{ marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#6b4226', marginBottom: '8px' }}>Descrição</h2>
+              <p style={{ color: '#4b5563' }}>{product.description}</p>
+            </div>
+            
+            <div style={{ marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#6b4226', marginBottom: '8px' }}>Detalhes</h2>
+              <ul style={{ paddingLeft: '20px', color: '#4b5563' }}>
+                <li>Peso/Volume: {product.weight}</li>
+                <li>Categoria: {product.category}</li>
+                {product.containsAlcohol && (
+                  <li style={{ color: '#b91c1c' }}>Contém álcool - Venda proibida para menores de 18 anos</li>
+                )}
+              </ul>
             </div>
           </div>
         </div>
       </main>
       
       <Footer />
-      
-      {/* Age Verification Modal */}
-      {showAgeGate && (
-        <AgeGate 
-          onVerified={handleAgeVerified} 
-          onCancel={() => setShowAgeGate(false)} 
-        />
-      )}
     </div>
   );
 }
