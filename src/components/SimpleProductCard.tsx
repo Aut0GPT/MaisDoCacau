@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Product } from './ProductCard';
 
 interface SimpleProductCardProps {
@@ -23,12 +24,14 @@ export default function SimpleProductCard({ product, onAddToCart }: SimpleProduc
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02] border-2 border-transparent">
       <Link href={`/product/${product.id}`}>
-        <div className="h-48 p-2 flex items-center justify-center bg-[#f9f5eb]">
-          <img
+        <div className="h-48 p-2 flex items-center justify-center bg-[#f9f5eb] relative">
+          <Image
             src={imagePath}
             alt={product.name}
-            className="max-h-full max-w-full object-contain rounded-t-lg"
-            loading="lazy"
+            width={150}
+            height={150}
+            className="object-contain rounded-t-lg"
+            priority={false}
           />
         </div>
         <div className="p-4 flex flex-col gap-2">

@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 interface SimpleHeroImageProps {
   src: string;
   alt: string;
@@ -17,17 +19,13 @@ export default function SimpleHeroImage({ src, alt, className = '' }: SimpleHero
         backgroundColor: '#6b4226'
       }}
     >
-      <img
+      <Image
         src={src}
         alt={alt}
-        className="w-full h-full object-cover"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%'
-        }}
+        fill
+        className="object-cover"
+        sizes="100vw"
+        priority
       />
     </div>
   );

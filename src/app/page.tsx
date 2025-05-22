@@ -10,10 +10,10 @@ import Image from 'next/image';
 import WelcomeAuth from '@/components/WelcomeAuth';
 
 export default function Home() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  // We only need the handler function, not the state
   const handleAuthenticated = () => {
-    setIsAuthenticated(true);
+    // Authentication completed
+    console.log('User authenticated successfully');
   };
 
   return (
