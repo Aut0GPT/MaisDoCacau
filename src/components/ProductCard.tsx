@@ -14,6 +14,14 @@ export interface Product {
   featured: boolean;
   new: boolean;
   containsAlcohol: boolean;
+  // Additional fields for enhanced product information
+  ingredients?: string;
+  dietaryInfo?: string;
+  healthBenefits?: string;
+  usage?: string;
+  preparation?: string;
+  awards?: string;
+  origin?: string;
 }
 
 interface ProductCardProps {
