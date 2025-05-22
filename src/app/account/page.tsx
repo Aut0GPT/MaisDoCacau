@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMiniKit } from '@worldcoin/minikit-js/minikit-provider';
+import { walletAuth } from '@/auth/wallet';
+import { toast } from 'react-toastify';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -18,6 +21,7 @@ export default function Account() {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
+  const { isInstalled } = useMiniKit();
   
   // Check if user is already authenticated
   useEffect(() => {
@@ -37,27 +41,64 @@ export default function Account() {
     setError(null);
     
     try {
-      // Simulate World ID authentication (in a real app, this would use MiniKit)
-      // For development purposes, we'll just simulate a successful authentication after a delay
-      setTimeout(() => {
-        // Simulate successful authentication
-        const userData: User = {
-          address: '0x1234...5678',
-          username: 'Usuário World ID',
-          verified: true
-        };
+      if (!isInstalled) {
+        // If MiniKit is not installed, show error message
+        toast.error('Este app precisa ser executado dentro do World App para autenticação completa.');
         
-        // Save user data to localStorage
-        localStorage.setItem('user', JSON.stringify(userData));
-        setUser(userData);
+        // For development purposes, we'll simulate a successful authentication
+        if (process.env.NODE_ENV === 'development') {
+          const userData: User = {
+            address: '0x1234...5678',
+            username: 'Usuário World ID (Dev)',
+            verified: true
+          };
+          
+          localStorage.setItem('user', JSON.stringify(userData));
+          setUser(userData);
+          setLoyaltyPoints(Math.floor(Math.random() * 150) + 50);
+        } else {
+          setError('Este app precisa ser executado dentro do World App.');
+        }
+      } else {
+        // Use MiniKit wallet authentication
+        await walletAuth();
         
-        // Simulate loyalty points (would come from backend in real app)
-        setLoyaltyPoints(Math.floor(Math.random() * 150) + 50);
-        setIsAuthenticating(false);
-      }, 1500);
+        // Get user info from MiniKit
+        // For development, we'll use a fallback since we can't directly access MiniKit methods
+        let userInfo;
+        try {
+          // Try to get user info from MiniKit if available
+          if (typeof window !== 'undefined' && window.MiniKit && 'getUserInfo' in window.MiniKit) {
+            userInfo = await (window.MiniKit as any).getUserInfo();
+          }
+        } catch (error) {
+          console.error('Error getting user info from MiniKit:', error);
+        }
+        
+        if (userInfo) {
+          const userData: User = {
+            address: userInfo.walletAddress || '0x0000',
+            username: userInfo.username || 'Usuário World ID',
+            verified: true
+          };
+          
+          // Save user data to localStorage
+          localStorage.setItem('user', JSON.stringify(userData));
+          setUser(userData);
+          
+          // Simulate loyalty points (would come from backend in real app)
+          setLoyaltyPoints(Math.floor(Math.random() * 150) + 50);
+          
+          toast.success('Autenticação realizada com sucesso!');
+        } else {
+          throw new Error('Não foi possível obter informações do usuário');
+        }
+      }
     } catch (err) {
       setError('Ocorreu um erro durante a autenticação. Por favor, tente novamente.');
       console.error('Authentication error:', err);
+      toast.error('Erro na autenticação. Por favor, tente novamente.');
+    } finally {
       setIsAuthenticating(false);
     }
   };

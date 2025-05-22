@@ -7,10 +7,13 @@ import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getProductById } from '@/data/products';
+import { useCart } from '@/context/CartContext';
+import { toast } from 'react-toastify';
 
 export default function ProductDetail() {
   const params = useParams();
   const [quantity, setQuantity] = useState(1);
+  const { addToCart, updateQuantity } = useCart();
   
   const productId = params.id as string;
   const product = getProductById(productId);
@@ -35,9 +38,34 @@ export default function ProductDetail() {
     );
   }
   
-  // Function to handle adding to cart (simplified for now)
+  // Function to handle adding to cart
   const handleAddToCart = () => {
-    alert(`Produto ${product.name} adicionado ao carrinho! (${quantity} unidades)`);
+    try {
+      // Check if the product is alcoholic and requires age verification
+      if (product.containsAlcohol) {
+        // In a real implementation, we would verify age with World ID
+        // For now, just show a confirmation
+        const isAdult = confirm('Este produto contém álcool. Você confirma que é maior de 18 anos?');
+        if (!isAdult) {
+          toast.error('Produto alcoólico - Venda proibida para menores de 18 anos');
+          return;
+        }
+      }
+
+      // Add product to cart
+      addToCart(product);
+      
+      // If quantity is more than 1, update the quantity
+      if (quantity > 1) {
+        updateQuantity(product.id, quantity);
+      }
+      
+      // Show success message
+      toast.success(`${product.name} adicionado ao carrinho! (${quantity} unidades)`);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast.error('Erro ao adicionar produto ao carrinho. Tente novamente.');
+    }
   };
   
   return (
