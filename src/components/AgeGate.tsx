@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { MiniKit } from '@worldcoin/minikit-js';
 
 interface AgeGateProps {
   onVerified: () => void;
@@ -14,18 +15,14 @@ export default function AgeGate({ onVerified, onCancel }: AgeGateProps) {
   const handleVerify = async () => {
     setIsVerifying(true);
     setError(null);
-    
     try {
-      // Simulate World ID verification (in a real app, this would use MiniKit)
-      // For development purposes, we'll just simulate a successful verification after a delay
-      setTimeout(() => {
-        // Simulate successful verification
-        onVerified();
-        setIsVerifying(false);
-      }, 1500);
+      // Trigger World ID verification via MiniKit
+      await MiniKit.commands.verify({ action: 'age_check' });
+      onVerified();
     } catch (err) {
       setError('Ocorreu um erro durante a verificação. Por favor, tente novamente.');
       console.error('Age verification error:', err);
+    } finally {
       setIsVerifying(false);
     }
   };

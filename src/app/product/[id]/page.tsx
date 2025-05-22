@@ -9,6 +9,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AgeGate from '@/components/AgeGate';
 import { useCart } from '@/context/CartContext';
+import { toast } from 'react-toastify';
 import { getProductById } from '@/data/products';
 
 export default function ProductDetail() {
@@ -52,6 +53,7 @@ export default function ProductDetail() {
     for (let i = 0; i < quantity; i++) {
       addToCart(product);
     }
+    toast.success('Adicionado ao carrinho!');
   };
   
   const handleAgeVerified = () => {
@@ -62,6 +64,7 @@ export default function ProductDetail() {
     for (let i = 0; i < quantity; i++) {
       addToCart(product);
     }
+    toast.success('Adicionado ao carrinho!');
   };
   
   return (

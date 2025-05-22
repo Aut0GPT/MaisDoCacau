@@ -3,6 +3,8 @@ import { MiniKitProvider } from '@worldcoin/minikit-js/minikit-provider';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import dynamic from 'next/dynamic';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import type { ReactNode } from 'react';
 import I18nProvider from '@/components/I18nProvider';
 import { CartProvider } from '@/context/CartContext';
@@ -41,6 +43,7 @@ export default function ClientProviders({
           <I18nProvider>
             <CartProvider>
               {children}
+              <ToastContainer position="bottom-right" autoClose={3000} />
             </CartProvider>
           </I18nProvider>
         </SessionProvider>
