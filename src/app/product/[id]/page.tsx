@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getProductById } from '@/data/products';
@@ -56,15 +57,15 @@ export default function ProductDetail() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '32px', marginBottom: '32px' }}>
           {/* Product Image */}
           <div style={{ height: '300px', backgroundColor: '#f9f5eb', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', position: 'relative' }}>
-            <img 
+            <Image 
               src={product.image} 
               alt={product.name} 
+              width={300}
+              height={300}
               style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
-              onError={(e) => {
-                // If image fails, show a placeholder
+              onError={() => {
+                // Log error for debugging
                 console.log(`Image failed to load: ${product.image}`);
-                const imgElement = e.target as HTMLImageElement;
-                imgElement.src = 'https://via.placeholder.com/300x300?text=Mais+do+Cacau';
               }}
             />
           </div>

@@ -5,6 +5,7 @@ import { products } from '@/data/products';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Home() {
   return (
@@ -27,16 +28,16 @@ export default function Home() {
               onClick={() => window.location.href = `/product/${product.id}`}
             >
               <div style={{ height: '200px', backgroundColor: '#f9f5eb', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px', position: 'relative' }}>
-                {/* Use the mapped image path */}
-                <img 
+                {/* Use Next.js Image component */}
+                <Image 
                   src={product.image} 
                   alt={product.name}
+                  width={200}
+                  height={200}
                   style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
-                  onError={(e) => {
-                    // If image fails, show a placeholder
+                  onError={() => {
+                    // Log error for debugging
                     console.log(`Image failed to load: ${product.image}`);
-                    const imgElement = e.target as HTMLImageElement;
-                    imgElement.src = 'https://via.placeholder.com/200x200?text=Mais+do+Cacau';
                   }}
                 />
               </div>
