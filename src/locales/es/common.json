@@ -1,0 +1,78 @@
+{
+  "appName": "Mais do Cacau Emporium",
+  "home": {
+    "title": "Delicias a Base de Cacao",
+    "subtitle": "Productos artesanales y gourmet de cacao",
+    "featuredProducts": "Productos Destacados",
+    "newArrivals": "Novedades",
+    "ourStory": "Nuestra Historia",
+    "storyText": "Mais do Cacau es una empresa familiar dedicada a la producción artesanal de productos derivados del cacao, valorando la calidad y la tradición."
+  },
+  "categories": {
+    "all": "Todos los Productos",
+    "delicacies": "Delicias y Dulces",
+    "pantry": "Gourmet y Despensa",
+    "healthy": "Opciones Saludables",
+    "spirits": "Cauchaça y Bebidas"
+  },
+  "product": {
+    "addToCart": "Añadir al Carrito",
+    "ingredients": "Ingredientes",
+    "origin": "Origen",
+    "reviews": "Reseñas",
+    "relatedProducts": "Productos Relacionados",
+    "outOfStock": "Agotado",
+    "ageVerification": "Verificación de Edad",
+    "ageRequired": "Este producto contiene alcohol y está destinado solo para mayores de 18 años."
+  },
+  "cart": {
+    "title": "Carrito de Compras",
+    "empty": "Tu carrito está vacío",
+    "continueShopping": "Continuar Comprando",
+    "checkout": "Finalizar Compra",
+    "subtotal": "Subtotal",
+    "shipping": "Envío",
+    "total": "Total",
+    "removeItem": "Eliminar Artículo",
+    "quantity": "Cantidad"
+  },
+  "checkout": {
+    "title": "Finalizar Compra",
+    "shippingInfo": "Información de Envío",
+    "paymentMethod": "Método de Pago",
+    "payWithCrypto": "Pagar con Criptomoneda",
+    "payWithCard": "Pagar con Tarjeta",
+    "placeOrder": "Realizar Pedido",
+    "orderSummary": "Resumen del Pedido"
+  },
+  "account": {
+    "title": "Mi Cuenta",
+    "orders": "Mis Pedidos",
+    "addresses": "Direcciones",
+    "signIn": "Iniciar Sesión",
+    "signOut": "Cerrar Sesión",
+    "verifyWithWorldID": "Verificar con World ID",
+    "loyaltyPoints": "Puntos de Fidelidad",
+    "cacauClub": "Club del Cacao"
+  },
+  "nav": {
+    "home": "Inicio",
+    "products": "Productos",
+    "cart": "Carrito",
+    "account": "Cuenta"
+  },
+  "footer": {
+    "followUs": "Síguenos",
+    "contact": "Contacto",
+    "terms": "Términos y Condiciones",
+    "privacy": "Política de Privacidad"
+  },
+  "worldID": {
+    "verifyAge": "Verificar Edad con World ID",
+    "verifying": "Verificando...",
+    "verified": "Verificado",
+    "cancel": "Cancelar",
+    "error": "Error en la verificación",
+    "notInApp": "Por favor, abre esta aplicación en World App para verificar tu edad."
+  }
+}

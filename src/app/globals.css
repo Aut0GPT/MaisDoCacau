@@ -1,0 +1,45 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+  --color-primary: #6b4226; /* Cocoa brown */
+  --color-secondary: #8b5d33; /* Lighter brown */
+  --color-accent: #d4a76a; /* Golden/caramel */
+  --color-background: #fff8e7; /* Cream/ivory */
+  --color-text: #3d2314; /* Dark brown */
+}
+
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+  overscroll-behavior: none;
+  overflow: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair), serif;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.container {
+  height: 100dvh;
+  overflow-y: auto;
+  padding-bottom: 70px; /* Space for bottom navigation */
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border-radius: 3px;
+}

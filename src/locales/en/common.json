@@ -1,0 +1,78 @@
+{
+  "appName": "Mais do Cacau Emporium",
+  "home": {
+    "title": "Cocoa-Based Delicacies",
+    "subtitle": "Artisanal and gourmet cocoa products",
+    "featuredProducts": "Featured Products",
+    "newArrivals": "New Arrivals",
+    "ourStory": "Our Story",
+    "storyText": "Mais do Cacau is a family business dedicated to the artisanal production of cocoa-derived products, valuing quality and tradition."
+  },
+  "categories": {
+    "all": "All Products",
+    "delicacies": "Delicacies & Sweets",
+    "pantry": "Gourmet & Pantry",
+    "healthy": "Healthy Options",
+    "spirits": "Cauchaça & Spirits"
+  },
+  "product": {
+    "addToCart": "Add to Cart",
+    "ingredients": "Ingredients",
+    "origin": "Origin",
+    "reviews": "Reviews",
+    "relatedProducts": "Related Products",
+    "outOfStock": "Out of Stock",
+    "ageVerification": "Age Verification",
+    "ageRequired": "This product contains alcohol and is intended for adults 18 years and older only."
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "continueShopping": "Continue Shopping",
+    "checkout": "Checkout",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "removeItem": "Remove Item",
+    "quantity": "Quantity"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "shippingInfo": "Shipping Information",
+    "paymentMethod": "Payment Method",
+    "payWithCrypto": "Pay with Cryptocurrency",
+    "payWithCard": "Pay with Card",
+    "placeOrder": "Place Order",
+    "orderSummary": "Order Summary"
+  },
+  "account": {
+    "title": "My Account",
+    "orders": "My Orders",
+    "addresses": "Addresses",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "verifyWithWorldID": "Verify with World ID",
+    "loyaltyPoints": "Loyalty Points",
+    "cacauClub": "Cacau Club"
+  },
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "cart": "Cart",
+    "account": "Account"
+  },
+  "footer": {
+    "followUs": "Follow Us",
+    "contact": "Contact",
+    "terms": "Terms and Conditions",
+    "privacy": "Privacy Policy"
+  },
+  "worldID": {
+    "verifyAge": "Verify Age with World ID",
+    "verifying": "Verifying...",
+    "verified": "Verified",
+    "cancel": "Cancel",
+    "error": "Verification error",
+    "notInApp": "Please open this app in the World App to verify your age."
+  }
+}
