@@ -1,15 +1,26 @@
 'use client';
 
 // Import basic components and data
+import { useState } from 'react';
 import { products } from '@/data/products';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
+import WelcomeAuth from '@/components/WelcomeAuth';
 
 export default function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const handleAuthenticated = () => {
+    setIsAuthenticated(true);
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Welcome Authentication Screen */}
+      <WelcomeAuth onAuthenticated={handleAuthenticated} />
+      
       <Header />
       
       <main style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto', flex: '1' }}>
