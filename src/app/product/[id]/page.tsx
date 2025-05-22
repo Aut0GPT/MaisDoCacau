@@ -124,6 +124,55 @@ export default function ProductDetail() {
               <p style={{ color: '#4b5563' }}>{product.description}</p>
             </div>
             
+            {product.ingredients && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#6b4226', marginBottom: '8px' }}>Ingredientes</h2>
+                <p style={{ color: '#4b5563' }}>{product.ingredients}</p>
+              </div>
+            )}
+
+            {product.healthBenefits && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#6b4226', marginBottom: '8px' }}>Benefícios para a Saúde</h2>
+                <p style={{ color: '#4b5563' }}>{product.healthBenefits}</p>
+              </div>
+            )}
+
+            {product.usage && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#6b4226', marginBottom: '8px' }}>Como Consumir</h2>
+                <p style={{ color: '#4b5563' }}>{product.usage}</p>
+              </div>
+            )}
+
+            {product.preparation && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#6b4226', marginBottom: '8px' }}>Modo de Preparo</h2>
+                <p style={{ color: '#4b5563' }}>{product.preparation}</p>
+              </div>
+            )}
+
+            {product.dietaryInfo && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#6b4226', marginBottom: '8px' }}>Informação Nutricional</h2>
+                <p style={{ color: '#4b5563' }}>{product.dietaryInfo}</p>
+              </div>
+            )}
+
+            {product.origin && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#6b4226', marginBottom: '8px' }}>Origem</h2>
+                <p style={{ color: '#4b5563' }}>{product.origin}</p>
+              </div>
+            )}
+
+            {product.awards && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#6b4226', marginBottom: '8px' }}>Premiações</h2>
+                <p style={{ color: '#4b5563' }}>{product.awards}</p>
+              </div>
+            )}
+            
             <div style={{ marginBottom: '24px' }}>
               <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#6b4226', marginBottom: '8px' }}>Detalhes</h2>
               <ul style={{ paddingLeft: '20px', color: '#4b5563' }}>
