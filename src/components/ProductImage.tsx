@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface ProductImageProps {
   src: string;
@@ -12,9 +12,27 @@ interface ProductImageProps {
 
 export default function ProductImage({ src, alt, priority = false, className = '' }: ProductImageProps) {
   const [isLoading, setIsLoading] = useState(true);
+  const [imgSrc, setImgSrc] = useState(src);
   
   // Check if the image is SVG
   const isSvg = src.toLowerCase().endsWith('.svg');
+
+  // Handle image error
+  const handleError = () => {
+    // If SVG fails, try falling back to JPG version
+    if (isSvg) {
+      const jpgPath = src.replace('.svg', '.jpg');
+      console.log(`Trying fallback image: ${jpgPath}`);
+      setImgSrc(jpgPath);
+    }
+    setIsLoading(false);
+  };
+
+  // Reset loading state when src changes
+  useEffect(() => {
+    setIsLoading(true);
+    setImgSrc(src);
+  }, [src]);
 
   return (
     <div 
@@ -29,13 +47,13 @@ export default function ProductImage({ src, alt, priority = false, className = '
     >
       <div className="relative w-full h-full flex items-center justify-center p-2">
         <Image
-          src={src}
+          src={imgSrc}
           alt={alt}
           width={1080}
           height={1350}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           style={{ 
-            objectFit: 'scale-down', // Changed from 'contain' to 'scale-down' for better display
+            objectFit: 'contain',
             maxWidth: '100%',
             maxHeight: '100%',
             width: 'auto',
@@ -44,8 +62,9 @@ export default function ProductImage({ src, alt, priority = false, className = '
           }}
           className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
           onLoadingComplete={() => setIsLoading(false)}
+          onError={handleError}
           priority={priority}
-          unoptimized={isSvg} // Don't optimize SVGs as they're already optimized
+          unoptimized={true} // Don't optimize images to avoid processing issues
         />
       </div>
       {isLoading && (
