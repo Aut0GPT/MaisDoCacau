@@ -14,18 +14,25 @@ export default function HeroImage({ src, alt, priority = false, className = '' }
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className={`relative w-full h-full ${className}`} style={{ position: 'relative', minHeight: '100%', height: '100%' }}>
+    <div 
+      className={`relative w-full h-full overflow-hidden ${className}`} 
+      style={{ 
+        position: 'relative', 
+        minHeight: '100%', 
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
       <Image
         src={src}
         alt={alt}
-        width={1920}
-        height={1080}
+        fill
         sizes="100vw"
         style={{ 
-          objectFit: 'cover',
-          width: '100%',
-          height: '100%',
-          position: 'relative'
+          objectPosition: 'center',
+          objectFit: 'cover'
         }}
         className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
         onLoadingComplete={() => setIsLoading(false)}

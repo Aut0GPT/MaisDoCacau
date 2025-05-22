@@ -33,7 +33,7 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
   return (
     <div className={`bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02] border-2 ${product.featured ? 'border-yellow-400' : 'border-transparent'}`}>
       <Link href={`/product/${product.id}`}>
-        <div className="h-48 w-full" style={{ height: '12rem' }}>
+        <div className="h-48 w-full" style={{ height: '12rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <ProductImage
             src={product.image}
             alt={product.name}

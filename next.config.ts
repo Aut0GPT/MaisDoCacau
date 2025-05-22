@@ -15,12 +15,8 @@ const nextConfig: NextConfig = {
   },
   allowedDevOrigins: ['*'], // Add your dev origin here
   reactStrictMode: false,
-  // Optimize SVG handling
+  // Simpler webpack config to avoid TailwindCSS conflicts
   webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ['@svgr/webpack'],
-    });
     return config;
   },
 };

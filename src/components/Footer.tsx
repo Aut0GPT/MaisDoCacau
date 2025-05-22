@@ -9,9 +9,9 @@ export default function Footer() {
   const { totalItems } = useCart();
   
   return (
-    <footer className="fixed bottom-0 left-0 right-0 bg-[var(--color-primary)] text-white z-10">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-around items-center h-16">
+    <footer className="fixed bottom-0 left-0 right-0 bg-[var(--color-primary)] text-white z-10 shadow-lg">
+      <div className="w-full max-w-screen-xl mx-auto px-4">
+        <div className="flex justify-between items-center h-16 md:h-14">
           <NavItem 
             href="/" 
             label="Início" 
@@ -80,10 +80,12 @@ function NavItem({
   return (
     <Link 
       href={href} 
-      className={`flex flex-col items-center ${isActive ? 'text-[var(--color-accent)]' : 'text-white'}`}
+      className={`flex flex-col items-center justify-center w-1/4 py-2 ${isActive ? 'text-[var(--color-accent)]' : 'text-white hover:text-gray-200'}`}
     >
-      {icon}
-      <span className="text-xs mt-1">{label}</span>
+      <div className="flex items-center justify-center h-6">
+        {icon}
+      </div>
+      <span className="text-xs mt-1 text-center font-medium">{label}</span>
     </Link>
   );
 }

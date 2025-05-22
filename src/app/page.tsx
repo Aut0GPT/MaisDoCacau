@@ -85,7 +85,7 @@ export default function Home() {
         Da escolha dos frutos ao cuidado no preparo, buscamos sempre inovar sem perder a essência do sabor autêntico. Experimente nossos produtos e descubra o verdadeiro prazer do cacau!
       </p>
     </div>
-    <div className="md:w-1/2 h-60 md:h-80 w-full rounded-lg overflow-hidden" style={{ height: '20rem' }}>
+    <div className="md:w-1/2 h-60 md:h-80 w-full rounded-lg overflow-hidden" style={{ height: '20rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <ProductImage 
         src="/images/story-image.jpg" 
         alt="Nossa História" 

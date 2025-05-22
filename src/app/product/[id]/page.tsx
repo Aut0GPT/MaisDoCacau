@@ -86,7 +86,7 @@ export default function ProductDetail() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Product Image */}
-          <div className="h-80 md:h-96 rounded-lg overflow-hidden" style={{ height: '24rem' }}>
+          <div className="h-80 md:h-96 rounded-lg overflow-hidden" style={{ height: '24rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ProductImage 
               src={product.image} 
               alt={product.name} 
