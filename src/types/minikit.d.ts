@@ -6,21 +6,63 @@ interface MiniKitUserInfo {
   verified?: boolean;
 }
 
-interface MiniKitGlobal {
+interface WalletAuthParams {
+  nonce: string;
+  expirationTime: Date;
+  notBefore: Date;
+  statement: string;
+}
+
+interface VerifyParams {
+  action: string;
+  signal?: string;
+}
+
+interface PayParams {
+  recipient: string;
+  amount: number;
+  token: string;
+}
+
+interface TransactionParams {
+  to: string;
+  data: string;
+  value?: string;
+}
+
+interface CommandResponse {
+  status: string;
+  error_code?: string;
+  address?: string;
+  [key: string]: unknown;
+}
+
+interface FinalPayload {
+  status: string;
+  error_code?: string;
+  address?: string;
+  [key: string]: unknown;
+}
+
+interface CommandResult {
+  finalPayload: FinalPayload;
+}
+
+export interface MiniKitGlobal {
   getUserInfo: () => Promise<MiniKitUserInfo>;
   getUserByUsername: (username: string) => Promise<MiniKitUserInfo>;
   commandsAsync: {
-    walletAuth: (params: any) => Promise<any>;
-    verify: (params: any) => Promise<any>;
-    pay: (params: any) => Promise<any>;
-    sendTransaction: (params: any) => Promise<any>;
-    getPermissions: () => Promise<any>;
+    walletAuth: (params: WalletAuthParams) => Promise<CommandResult>;
+    verify: (params: VerifyParams) => Promise<CommandResult>;
+    pay: (params: PayParams) => Promise<CommandResult>;
+    sendTransaction: (params: TransactionParams) => Promise<CommandResult>;
+    getPermissions: () => Promise<Record<string, boolean>>;
   };
   commands: {
-    walletAuth: (params: any) => void;
-    verify: (params: any) => void;
-    pay: (params: any) => void;
-    sendTransaction: (params: any) => void;
+    walletAuth: (params: WalletAuthParams) => void;
+    verify: (params: VerifyParams) => void;
+    pay: (params: PayParams) => void;
+    sendTransaction: (params: TransactionParams) => void;
   };
   isInstalled: () => boolean;
 }

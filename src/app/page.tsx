@@ -1,7 +1,6 @@
 'use client';
 
 // Import basic components and data
-import { useState } from 'react';
 import { products } from '@/data/products';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';

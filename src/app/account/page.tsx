@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useMiniKit } from '@worldcoin/minikit-js/minikit-provider';
 import { walletAuth } from '@/auth/wallet';
 import { toast } from 'react-toastify';
+import type { MiniKitGlobal } from '@/types/minikit';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -69,7 +70,7 @@ export default function Account() {
         try {
           // Try to get user info from MiniKit if available
           if (typeof window !== 'undefined' && window.MiniKit && 'getUserInfo' in window.MiniKit) {
-            userInfo = await (window.MiniKit as any).getUserInfo();
+            userInfo = await (window.MiniKit as MiniKitGlobal).getUserInfo();
           }
         } catch (error) {
           console.error('Error getting user info from MiniKit:', error);
