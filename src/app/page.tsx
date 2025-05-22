@@ -74,23 +74,27 @@ export default function Home() {
         </section>
 
         {/* Our Story */}
-        <section className="mb-12 bg-amber-100 p-6 rounded-lg">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">{t('home.ourStory')}</h2>
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div className="md:w-1/2">
-              <p className="text-lg">{t('home.storyText')}</p>
-              <p className="mt-4 text-lg">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor.</p>
-            </div>
-            <div className="md:w-1/2 relative h-60 md:h-80 w-full rounded-lg overflow-hidden">
-              <Image 
-                src="/images/story-image.jpg" 
-                alt="Nossa História" 
-                fill
-                style={{ objectFit: 'cover' }}
-              />
-            </div>
-          </div>
-        </section>
+        <section className="mb-16 bg-amber-100 p-8 rounded-lg shadow-md">
+  <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[var(--color-primary)]">{t('home.ourStory')}</h2>
+  <div className="flex flex-col md:flex-row items-center gap-8">
+    <div className="md:w-1/2">
+      <p className="text-lg mb-4">
+        Mais do Cacau é uma empresa familiar dedicada à produção artesanal de produtos derivados do cacau, valorizando a qualidade e a tradição. Nossa missão é levar o melhor do cacau baiano para a sua mesa, com respeito à natureza e às pessoas envolvidas em cada etapa do processo.
+      </p>
+      <p className="text-lg">
+        Da escolha dos frutos ao cuidado no preparo, buscamos sempre inovar sem perder a essência do sabor autêntico. Experimente nossos produtos e descubra o verdadeiro prazer do cacau!
+      </p>
+    </div>
+    <div className="md:w-1/2 relative h-60 md:h-80 w-full rounded-lg overflow-hidden">
+      <Image 
+        src="/images/story-image.jpg" 
+        alt="Nossa História" 
+        fill
+        style={{ objectFit: 'cover' }}
+      />
+    </div>
+  </div>
+</section>
       </main>
 
       <Footer />

@@ -1,0 +1,17 @@
+{
+  "name": "Mais do Cacau Emporium",
+  "short_name": "Mais do Cacau",
+  "description": "Empório artesanal de produtos derivados do cacau baiano.",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48 72x72 96x96 128x128 256x256",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f59e42",
+  "theme_color": "#7c3f00",
+  "lang": "pt-BR"
+}

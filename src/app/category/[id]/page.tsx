@@ -61,7 +61,7 @@ export default function CategoryPage() {
           </Link>
         </div>
         
-        <h1 className="text-3xl font-bold mb-6">{getCategoryTitle(categoryId)}</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-[var(--color-primary)]">{getCategoryTitle(categoryId)}</h1>
         
         {products.length === 0 ? (
           <div className="text-center py-12">
