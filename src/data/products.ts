@@ -18,7 +18,7 @@ export const products: Product[] = [
     name: 'Amêndoa de Cacau Caramelizada',
     description: 'Deliciosas amêndoas de cacau caramelizadas, um petisco irresistível com o sabor autêntico do cacau. Perfeito para um lanche saudável e energético.',
     price: 28.90,
-    image: '/images/products/imagem-fundo-cacau-caramelizada-125g.jpg',
+    image: '/images/products/amendo-cacau-caramelizada-125g.jpg',
     category: ProductCategory.SNACK,
     weight: '125g',
     featured: true,
