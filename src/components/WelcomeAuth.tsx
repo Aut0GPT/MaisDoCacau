@@ -5,6 +5,8 @@ import { useMiniKit } from '@worldcoin/minikit-js/minikit-provider';
 import { walletAuth } from '@/auth/wallet';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
+import { useAuth, User } from '@/context/AuthContext';
+import type { MiniKitGlobal } from '@/types/minikit';
 
 interface WelcomeAuthProps {
   onAuthenticated: () => void;
@@ -14,6 +16,7 @@ export default function WelcomeAuth({ onAuthenticated }: WelcomeAuthProps) {
   const [isVisible, setIsVisible] = useState(false);
   const { isInstalled } = useMiniKit();
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
 
   const handleAuthenticate = useCallback(async () => {
     try {
@@ -23,9 +26,22 @@ export default function WelcomeAuth({ onAuthenticated }: WelcomeAuthProps) {
       if (!isInstalled) {
         console.log('MiniKit not installed, using development mode authentication');
         toast.info('Modo de desenvolvimento: autenticação simulada.');
-        // For development, we'll allow skipping authentication
+        
+        // For development, we'll create a mock user
+        const mockUser: User = {
+          address: '0x1234...5678',
+          username: 'Usuário World ID (Dev)',
+          verified: true,
+          profileImage: 'https://api.dicebear.com/7.x/micah/svg?seed=worldcoin',
+          email: 'dev@worldcoin.org',
+          worldId: 'wld:1234567890'
+        };
+        
+        // Store user in AuthContext
+        login(mockUser);
+        
+        // Hide welcome screen
         setIsVisible(false);
-        localStorage.setItem('hasAuthenticated', 'true');
         onAuthenticated();
         return;
       }
@@ -37,8 +53,36 @@ export default function WelcomeAuth({ onAuthenticated }: WelcomeAuthProps) {
         const authResult = await walletAuth();
         console.log('Wallet authentication successful:', authResult);
         
-        // Mark user as authenticated
-        localStorage.setItem('hasAuthenticated', 'true');
+        // Get user info from MiniKit
+        try {
+          if (typeof window !== 'undefined' && window.MiniKit && 'getUserInfo' in window.MiniKit) {
+            const userInfo = await (window.MiniKit as MiniKitGlobal).getUserInfo();
+            console.log('User info from MiniKit:', userInfo);
+            
+            if (userInfo) {
+              const userData: User = {
+                address: userInfo.walletAddress || '0x0000',
+                username: userInfo.username || 'Usuário World ID',
+                verified: true,
+                profileImage: userInfo.profileImage || userInfo.profilePictureUrl,
+                email: userInfo.email,
+                worldId: userInfo.worldId
+              };
+              
+              // Store user in AuthContext
+              login(userData);
+            }
+          }
+        } catch (error) {
+          console.error('Error getting user info from MiniKit:', error);
+          // If we can't get user info, create a basic user from auth result
+          const basicUser: User = {
+            address: authResult.address || '0x0000',
+            username: 'Usuário World ID',
+            verified: true
+          };
+          login(basicUser);
+        }
         
         // Hide welcome screen
         setIsVisible(false);
@@ -59,7 +103,7 @@ export default function WelcomeAuth({ onAuthenticated }: WelcomeAuthProps) {
     } finally {
       setIsLoading(false);
     }
-  }, [isInstalled, onAuthenticated, setIsLoading, setIsVisible]);
+  }, [isInstalled, onAuthenticated, login, setIsLoading, setIsVisible]);
 
   const handleSkip = useCallback(() => {
     // For development purposes, allow skipping

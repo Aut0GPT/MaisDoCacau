@@ -5,6 +5,7 @@ import { useMiniKit } from '@worldcoin/minikit-js/minikit-provider';
 import { walletAuth } from '@/auth/wallet';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
+import { useAuth } from '@/context/AuthContext';
 import type { MiniKitGlobal } from '@/types/minikit';
 
 interface User {
@@ -31,24 +32,21 @@ export default function ClientAccount() {
     };
     return translations[key] || key;
   };
-  const [user, setUser] = useState<User | null>(null);
+  
+  // Use the global auth context instead of local state
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const { isInstalled } = useMiniKit();
   
-  // Check if user is already authenticated
+  // Generate loyalty points when user is loaded
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error('Failed to parse user from localStorage:', error);
-        localStorage.removeItem('user');
-      }
+    if (user) {
+      // Simulate loyalty points (would come from backend in real app)
+      setLoyaltyPoints(Math.floor(Math.random() * 150) + 50);
     }
-  }, []);
+  }, [user]);
   
   const handleAuthenticate = async () => {
     setIsAuthenticating(true);
@@ -61,74 +59,15 @@ export default function ClientAccount() {
         console.log('MiniKit not installed, using development mode authentication');
         toast.info('Modo de desenvolvimento: autenticação simulada.');
         
-        // For development purposes, we'll simulate a successful authentication
-        if (process.env.NODE_ENV === 'development') {
-          const userData: User = {
-            address: '0x1234...5678',
-            username: 'Usuário World ID (Dev)',
-            verified: true,
-            profileImage: 'https://api.dicebear.com/7.x/micah/svg?seed=worldcoin',
-            email: 'dev@worldcoin.org',
-            worldId: 'wld:1234567890'
-          };
-          
-          localStorage.setItem('user', JSON.stringify(userData));
-          setUser(userData);
-          setLoyaltyPoints(Math.floor(Math.random() * 150) + 50);
-          toast.success('Autenticação simulada com sucesso!');
-        } else {
-          setError('Este app precisa ser executado dentro do World App.');
-        }
+        // Authentication will be handled by the WelcomeAuth component
+        // which uses the AuthContext to store user data
+        toast.success('Por favor, use a tela de boas-vindas para autenticar');
+        setError('Este app precisa ser executado dentro do World App.');
       } else {
         console.log('MiniKit installed, proceeding with wallet authentication');
         
-        // Use MiniKit wallet authentication
-        try {
-          const authResult = await walletAuth();
-          console.log('Wallet authentication successful:', authResult);
-          
-          // Get user info from MiniKit
-          let userInfo;
-          try {
-            console.log('Fetching user info from MiniKit...');
-            // Try to get user info from MiniKit if available
-            if (typeof window !== 'undefined' && window.MiniKit && 'getUserInfo' in window.MiniKit) {
-              userInfo = await (window.MiniKit as MiniKitGlobal).getUserInfo();
-              console.log('User info retrieved:', userInfo);
-            }
-          } catch (error) {
-            console.error('Error getting user info from MiniKit:', error);
-          }
-          
-          if (userInfo) {
-            // Following World MiniApps best practices - always display usernames, not wallet addresses
-            const userData: User = {
-              address: userInfo.walletAddress || '0x0000',
-              username: userInfo.username || 'Usuário World ID',
-              verified: true,
-              profileImage: userInfo.profileImage,
-              email: userInfo.email,
-              worldId: userInfo.worldId
-            };
-            
-            console.log('User data prepared:', userData);
-            
-            // Save user data to localStorage
-            localStorage.setItem('user', JSON.stringify(userData));
-            setUser(userData);
-            
-            // Simulate loyalty points (would come from backend in real app)
-            setLoyaltyPoints(Math.floor(Math.random() * 150) + 50);
-            
-            toast.success('Autenticação realizada com sucesso!');
-          } else {
-            console.error('No user info returned from MiniKit');
-            throw new Error('Não foi possível obter informações do usuário');
-          }
-        } catch (error) {
-          console.error('Wallet authentication specific error:', error);
-          throw error; // Re-throw to be caught by the outer catch
-        }
+        // Redirect to home page which will show the welcome auth screen
+        window.location.href = '/';
       }
     } catch (err) {
       const error = err as Error;
@@ -141,14 +80,20 @@ export default function ClientAccount() {
   };
   
   const handleSignOut = () => {
-    localStorage.removeItem('user');
-    setUser(null);
+    // Use the logout function from AuthContext
+    logout();
     setLoyaltyPoints(0);
+    toast.success('Você saiu da sua conta');
   };
   
   return (
     <main className="flex-grow container mx-auto px-4 py-6 overflow-y-auto">
-      {!user ? (
+      {isLoading ? (
+        <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6 text-center">
+          <div className="animate-spin mx-auto h-12 w-12 border-4 border-[var(--color-primary)] border-t-transparent rounded-full mb-4"></div>
+          <p className="text-gray-600">Verificando autenticação...</p>
+        </div>
+      ) : !user ? (
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
           <h1 className="text-2xl font-bold text-center mb-6">{t('account.title')}</h1>
           
