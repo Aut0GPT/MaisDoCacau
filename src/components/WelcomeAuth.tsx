@@ -96,8 +96,8 @@ export default function WelcomeAuth({ onAuthenticated }: WelcomeAuthProps) {
           <Image 
             src="/images/MaisDocacauLOGO.png" 
             alt="Mais do Cacau Logo" 
-            width={180} 
-            height={60} 
+            width={120} 
+            height={40} 
             className="bg-amber-50 p-2"
             onError={() => {
               console.log('Logo image failed to load');

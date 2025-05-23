@@ -14,8 +14,8 @@ export default function Header() {
           <Image 
             src="/images/MaisDocacauLOGO.png" 
             alt="Mais do Cacau Logo" 
-            width={150} 
-            height={50} 
+            width={100} 
+            height={33} 
             style={{ objectFit: 'contain' }}
           />
         </Link>

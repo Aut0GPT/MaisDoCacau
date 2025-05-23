@@ -17,7 +17,20 @@ interface User {
 }
 
 export default function ClientAccount() {
-  const { t } = useTranslation();
+  // Hardcoded translations since i18n setup is missing
+  const t = (key: string) => {
+    const translations: Record<string, string> = {
+      'account.title': 'Minha Conta',
+      'account.verifyWithWorldID': 'Verificar com World ID',
+      'account.worldIDVerification': 'Verificação World ID',
+      'account.verificationDescription': 'Verifique sua identidade para acessar todos os recursos',
+      'account.signOut': 'Sair',
+      'account.orders': 'Meus Pedidos',
+      'account.cacauClub': 'Clube do Cacau',
+      'account.loyaltyPoints': 'Pontos de Fidelidade'
+    };
+    return translations[key] || key;
+  };
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [error, setError] = useState<string | null>(null);
