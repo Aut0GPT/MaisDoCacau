@@ -33,18 +33,49 @@ export async function getAllProducts() {
 
 // Get a product by ID
 export async function getProductById(id: string) {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .eq('id', id)
-    .single();
-  
-  if (error) {
-    console.error(`Error fetching product with ID ${id}:`, error);
+  try {
+    // First try to get by UUID
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .single();
+    
+    if (data) {
+      return data as Product;
+    }
+    
+    // If not found by UUID, try to get by name (for compatibility with older links)
+    // This is a fallback for when product IDs in URLs don't match database UUIDs
+    if (error) {
+      console.log(`Product not found by ID ${id}, trying by name...`);
+      
+      // Get all products and find by name that contains the ID string
+      // This is a workaround and not efficient for production
+      const { data: allProducts } = await supabase
+        .from('products')
+        .select('*');
+      
+      if (allProducts && allProducts.length > 0) {
+        // Try to find a product with a name that includes the ID string
+        // or where the ID might be a slug version of the name
+        const matchingProduct = allProducts.find(p => 
+          p.name.toLowerCase().includes(id.toLowerCase()) ||
+          id.toLowerCase().includes(p.name.toLowerCase().replace(/\s+/g, '-'))
+        );
+        
+        if (matchingProduct) {
+          return matchingProduct as Product;
+        }
+      }
+    }
+    
+    console.error(`Product not found with ID ${id}`);
+    return null;
+  } catch (err) {
+    console.error(`Error fetching product with ID ${id}:`, err);
     return null;
   }
-  
-  return data as Product;
 }
 
 // Update product stock

@@ -37,6 +37,23 @@ export default function ClientAccount() {
     }
   }, [user]);
   
+  // Fetch user profile from Supabase when user is authenticated
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (user?.address) {
+        try {
+          // We already have the user data from AuthContext
+          // which includes Supabase profile data
+          console.log('User profile loaded from AuthContext:', user);
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+        }
+      }
+    };
+    
+    fetchUserProfile();
+  }, [user]);
+
   const handleAuthenticate = async () => {
     setIsAuthenticating(true);
     setError(null);
@@ -48,10 +65,8 @@ export default function ClientAccount() {
         console.log('MiniKit not installed, using development mode authentication');
         toast.info('Modo de desenvolvimento: autenticação simulada.');
         
-        // Authentication will be handled by the WelcomeAuth component
-        // which uses the AuthContext to store user data
-        toast.success('Por favor, use a tela de boas-vindas para autenticar');
-        setError('Este app precisa ser executado dentro do World App.');
+        // Redirect to home page which will show the welcome auth screen
+        window.location.href = '/';
       } else {
         console.log('MiniKit installed, proceeding with wallet authentication');
         
