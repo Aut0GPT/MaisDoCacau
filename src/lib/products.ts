@@ -1,6 +1,10 @@
 import { supabase } from './supabase';
+import type { Database } from '@/types/supabase';
 
-export interface Product {
+export type Product = Database['public']['Tables']['products']['Row'];
+
+// Client-side type for cart display
+export interface CartProduct {
   id: string;
   name: string;
   description: string;
@@ -8,16 +12,8 @@ export interface Product {
   image: string;
   category: string;
   stock: number;
-  featured?: boolean;
-  containsAlcohol?: boolean;
-  ingredients?: string;
-  healthBenefits?: string;
-  usage?: string;
-  preparation?: string;
-  dietaryInfo?: string;
-  origin?: string;
-  awards?: string;
-  weight?: string;
+  featured?: boolean | null;
+  containsAlcohol?: boolean | null;
 }
 
 // Get all products
@@ -68,48 +64,191 @@ export async function updateProductStock(id: string, newStock: number) {
 
 // Seed initial products (for development)
 export async function seedInitialProducts() {
-  const initialProducts: Omit<Product, 'id'>[] = [
+  const initialProducts = [
     {
-      name: 'Chocolate 70% Cacau',
-      description: 'Chocolate artesanal com 70% de cacau, produzido com cacau fino de São Paulo.',
-      price: 25.90,
-      image: '/products/chocolate-70.jpg',
-      category: 'Chocolates',
+      name: 'Combo Cacau Saudável',
+      description: 'Combo completo com Granola, mel de cacau e chá de cacau para uma experiência completa de bem-estar.',
+      price: 89.90,
+      image: '/products/combo-cacau.jpg',
+      category: 'Combos',
       stock: 10,
-      featured: true
+      featured: true,
+      containsAlcohol: false,
+      ingredients: 'Granola baiana, mel de cacau puro, chá de cacau',
+      healthBenefits: 'Rico em antioxidantes, minerais e fibras. Fortalece o sistema imunológico e proporciona energia sustentável.',
+      origin: 'Bahia, Brasil',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     },
     {
-      name: 'Chocolate ao Leite',
-      description: 'Chocolate ao leite cremoso, feito com cacau de alta qualidade e leite fresco.',
-      price: 18.90,
-      image: '/products/chocolate-leite.jpg',
-      category: 'Chocolates',
-      stock: 15
+      name: 'Cauchaça Original - 160 ml',
+      description: 'Bebida destilada premium feita a partir da polpa do cacau, com sabor único e aromático. Garrafa de 160ml.',
+      price: 59.90,
+      image: '/products/cauchaça-160ml.jpg',
+      category: 'Bebidas',
+      stock: 15,
+      featured: false,
+      containsAlcohol: true,
+      ingredients: 'Destilado de cacau, água',
+      usage: 'Ideal para drinks e coqueteis especiais ou para degustar puro.',
+      origin: 'Bahia, Brasil',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     },
     {
-      name: 'Nibs de Cacau',
-      description: 'Nibs de cacau torrados, perfeitos para adicionar em receitas ou consumir como snack.',
-      price: 22.50,
-      image: '/products/nibs.jpg',
+      name: 'Cauchaça Original - 700 ml',
+      description: 'Bebida destilada premium feita a partir da polpa do cacau, com sabor único e aromático. Garrafa de 700ml.',
+      price: 149.90,
+      image: '/products/cauchaça-700ml.jpg',
+      category: 'Bebidas',
+      stock: 8,
+      featured: true,
+      containsAlcohol: true,
+      ingredients: 'Destilado de cacau, água',
+      usage: 'Ideal para drinks e coqueteis especiais ou para degustar puro.',
+      origin: 'Bahia, Brasil',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      name: 'Nibs de Cacau Premium',
+      description: 'Nibs de cacau torrados premium, perfeitos para adicionar em receitas ou consumir como snack saudável.',
+      price: 29.90,
+      image: '/products/nibs-premium.jpg',
       category: 'Derivados',
-      stock: 8
+      stock: 20,
+      featured: false,
+      containsAlcohol: false,
+      ingredients: '100% cacau torrado e quebrado',
+      healthBenefits: 'Rico em fibras, antioxidantes e minerais. Fonte natural de energia.',
+      usage: 'Adicione em smoothies, iogurtes, saladas de frutas ou consuma puro como snack.',
+      origin: 'Bahia, Brasil',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     },
     {
-      name: 'Bombons Sortidos',
-      description: 'Caixa com 12 bombons artesanais com recheios variados.',
-      price: 45.00,
-      image: '/products/bombons.jpg',
-      category: 'Bombons',
-      stock: 5,
-      featured: true
-    },
-    {
-      name: 'Pasta de Cacau',
-      description: 'Pasta pura de cacau, ideal para preparo de bebidas e sobremesas.',
+      name: 'Granola Baiana',
+      description: 'Granola artesanal com ingredientes da Bahia, incluindo cacau e castanhas regionais.',
       price: 32.90,
-      image: '/products/pasta.jpg',
-      category: 'Derivados',
-      stock: 7
+      image: '/products/granola-baiana.jpg',
+      category: 'Alimentos',
+      stock: 15,
+      featured: false,
+      containsAlcohol: false,
+      ingredients: 'Aveia, mel, nibs de cacau, castanhas, frutas secas regionais',
+      healthBenefits: 'Rica em fibras e nutrientes essenciais. Ajuda na digestão e fornece energia sustentada.',
+      dietaryInfo: 'Sem conservantes artificiais. Fonte de fibras e proteínas.',
+      origin: 'Bahia, Brasil',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      name: 'Vinagre Balsâmico de Cacau',
+      description: 'Vinagre balsâmico especial feito a partir da fermentação do cacau, com sabor único e versátil.',
+      price: 45.90,
+      image: '/products/vinagre-balsamico.jpg',
+      category: 'Condimentos',
+      stock: 12,
+      featured: false,
+      containsAlcohol: false,
+      ingredients: 'Polpa de cacau fermentada, especiarias',
+      usage: 'Ideal para saladas, marinadas e finalização de pratos.',
+      origin: 'Bahia, Brasil',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      name: 'Cauchaça Original - 50 ml',
+      description: 'Versão compacta da nossa bebida destilada premium feita a partir da polpa do cacau. Ideal para presente ou degustação.',
+      price: 29.90,
+      image: '/products/cauchaça-50ml.jpg',
+      category: 'Bebidas',
+      stock: 25,
+      featured: false,
+      containsAlcohol: true,
+      ingredients: 'Destilado de cacau, água',
+      usage: 'Ideal para degustação ou como presente.',
+      origin: 'Bahia, Brasil',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      name: 'Vinagre de Cacau',
+      description: 'Vinagre tradicional feito a partir da fermentação do cacau, com sabor único e versátil.',
+      price: 35.90,
+      image: '/products/vinagre-cacau.jpg',
+      category: 'Condimentos',
+      stock: 18,
+      featured: false,
+      containsAlcohol: false,
+      ingredients: 'Polpa de cacau fermentada',
+      usage: 'Ideal para saladas, marinadas e finalização de pratos.',
+      origin: 'Bahia, Brasil',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      name: 'Mel de Cacau - 1 litro',
+      description: 'Mel puro extraído da polpa do cacau, com sabor único e propriedades nutritivas excepcionais.',
+      price: 79.90,
+      image: '/products/mel-cacau-1l.jpg',
+      category: 'Alimentos',
+      stock: 10,
+      featured: true,
+      containsAlcohol: false,
+      ingredients: '100% mel de cacau puro',
+      healthBenefits: 'Rico em antioxidantes e nutrientes essenciais. Propriedades anti-inflamatórias naturais.',
+      usage: 'Use como adoçante natural em bebidas, sobremesas ou consuma puro.',
+      origin: 'Bahia, Brasil',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      name: 'Cauchaça Carvalho - 30 ml',
+      description: 'Edição especial da nossa bebida destilada premium, envelhecida em barris de carvalho. Miniatura para degustação.',
+      price: 39.90,
+      image: '/products/cauchaça-carvalho-30ml.jpg',
+      category: 'Bebidas',
+      stock: 15,
+      featured: true,
+      containsAlcohol: true,
+      ingredients: 'Destilado de cacau, água, envelhecido em barris de carvalho',
+      usage: 'Ideal para degustação ou como presente exclusivo.',
+      origin: 'Bahia, Brasil',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      name: 'Pick Nibs - nibs com rapadura',
+      description: 'Combinação perfeita de nibs de cacau crocantes com rapadura tradicional, um snack delicioso e energético.',
+      price: 25.90,
+      image: '/products/pick-nibs.jpg',
+      category: 'Alimentos',
+      stock: 22,
+      featured: true,
+      containsAlcohol: false,
+      ingredients: 'Nibs de cacau, rapadura artesanal',
+      healthBenefits: 'Fonte de energia natural e antioxidantes. Combinação de nutrientes do cacau com os minerais da rapadura.',
+      usage: 'Consuma como snack energético ou adicione em sobremesas e cereais.',
+      origin: 'Bahia, Brasil',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      name: 'Chá de Cacau',
+      description: 'Chá artesanal feito com cascas de cacau, com sabor suave e propriedades relaxantes.',
+      price: 19.90,
+      image: '/products/cha-cacau.jpg',
+      category: 'Bebidas',
+      stock: 30,
+      featured: true,
+      containsAlcohol: false,
+      ingredients: 'Cascas de cacau secas e selecionadas',
+      healthBenefits: 'Propriedades calmantes e relaxantes. Rico em teobromina, um estimulante natural mais suave que a cafeína.',
+      preparation: 'Adicione uma colher de sopa em água quente e deixe em infusão por 5-7 minutos.',
+      origin: 'Bahia, Brasil',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     }
   ];
   

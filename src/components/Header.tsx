@@ -41,6 +41,7 @@ export default function Header() {
         <nav style={{ display: 'flex', gap: '20px' }}>
           <NavLink href="/">Início</NavLink>
           <NavLink href="/category/all">Produtos</NavLink>
+          <NavLink href="/notes">Notas</NavLink>
         </nav>
 
         {/* Mobile menu - simplified */}
@@ -49,6 +50,7 @@ export default function Header() {
             <nav style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <NavLink href="/" onClick={() => setIsMenuOpen(false)}>Início</NavLink>
               <NavLink href="/category/all" onClick={() => setIsMenuOpen(false)}>Produtos</NavLink>
+              <NavLink href="/notes" onClick={() => setIsMenuOpen(false)}>Notas</NavLink>
             </nav>
           </div>
         )}
