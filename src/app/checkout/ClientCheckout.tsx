@@ -21,7 +21,7 @@ export default function ClientCheckout() {
   const router = useRouter();
   const { items, subtotal, clearCart } = useCart();
   const { user } = useAuth();
-  const { deliveryInfo, setDeliveryAddress, isValidNeighborhood, getDeliveryFee, getSupportedNeighborhoods } = useDelivery();
+  const { deliveryInfo, setDeliveryAddress, isValidNeighborhood, getDeliveryFee } = useDelivery();
   const { isInstalled } = useMiniKit();
   
   const [currentStep, setCurrentStep] = useState<CheckoutStep>(CheckoutStep.DELIVERY_ADDRESS);

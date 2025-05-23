@@ -1,7 +1,9 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { toast } from 'react-toastify';
 import { useMiniKit } from '@worldcoin/minikit-js/minikit-provider';
+import { getOrCreateUserProfile } from '@/lib/supabase';
 import type { MiniKitGlobal } from '@/types/minikit';
 
 export interface User {
@@ -80,11 +82,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkUserSession();
   }, [isInstalled]);
 
-  const login = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('hasAuthenticated', 'true');
-    console.log('User logged in:', userData);
+  const login = async (userData: User) => {
+    try {
+      // Store user in Supabase if they have a wallet address
+      if (userData.address && userData.address !== '0x0000') {
+        const userProfile = await getOrCreateUserProfile(userData.address, userData.username);
+        console.log('User profile in Supabase:', userProfile);
+        
+        // Update userData with any additional info from Supabase
+        if (userProfile) {
+          userData = {
+            ...userData,
+            // Add any additional fields from Supabase if needed
+          };
+        }
+      }
+      
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem('hasAuthenticated', 'true');
+      console.log('User logged in:', userData);
+      toast.success(`Bem-vindo, ${userData.username}!`);
+    } catch (error) {
+      console.error('Error during login:', error);
+      toast.error('Erro ao fazer login. Por favor, tente novamente.');
+    }
   };
 
   const logout = () => {

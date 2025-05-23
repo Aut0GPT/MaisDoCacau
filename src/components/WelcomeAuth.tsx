@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { useAuth, User } from '@/context/AuthContext';
 import type { MiniKitGlobal } from '@/types/minikit';
+import { getOrCreateUserProfile } from '@/lib/supabase';
 
 interface WelcomeAuthProps {
   onAuthenticated: () => void;
@@ -37,8 +38,8 @@ export default function WelcomeAuth({ onAuthenticated }: WelcomeAuthProps) {
           worldId: 'wld:1234567890'
         };
         
-        // Store user in AuthContext
-        login(mockUser);
+        // Store user in AuthContext and Supabase
+        await login(mockUser);
         
         // Hide welcome screen
         setIsVisible(false);
@@ -60,42 +61,50 @@ export default function WelcomeAuth({ onAuthenticated }: WelcomeAuthProps) {
             console.log('User info from MiniKit:', userInfo);
             
             if (userInfo) {
+              const walletAddress = userInfo.walletAddress || authResult.address || '0x0000';
+              
+              // Create user data with wallet address
               const userData: User = {
-                address: userInfo.walletAddress || '0x0000',
-                username: userInfo.username || 'Usuário World ID',
+                address: walletAddress,
+                username: userInfo.username || `User_${walletAddress.substring(0, 6)}`,
                 verified: true,
                 profileImage: userInfo.profileImage || userInfo.profilePictureUrl,
                 email: userInfo.email,
                 worldId: userInfo.worldId
               };
               
-              // Store user in AuthContext
-              login(userData);
+              // Store user in Supabase and AuthContext
+              await getOrCreateUserProfile(walletAddress, userData.username);
+              await login(userData);
+              
+              // Hide welcome screen and notify user
+              setIsVisible(false);
+              onAuthenticated();
+              toast.success(`Bem-vindo, ${userData.username}!`);
             }
           }
         } catch (error) {
           console.error('Error getting user info from MiniKit:', error);
           // If we can't get user info, create a basic user from auth result
+          const walletAddress = authResult.address || '0x0000';
           const basicUser: User = {
-            address: authResult.address || '0x0000',
-            username: 'Usuário World ID',
+            address: walletAddress,
+            username: `User_${walletAddress.substring(0, 6)}`,
             verified: true
           };
-          login(basicUser);
+          
+          // Store user in Supabase and AuthContext
+          await getOrCreateUserProfile(walletAddress, basicUser.username);
+          await login(basicUser);
+          
+          // Hide welcome screen and notify user
+          setIsVisible(false);
+          onAuthenticated();
+          toast.success(`Bem-vindo, ${basicUser.username}!`);
         }
-        
-        // Hide welcome screen
-        setIsVisible(false);
-        
-        // Call the onAuthenticated callback
-        onAuthenticated();
-        
-        toast.success('Autenticação realizada com sucesso!');
       } catch (error) {
-        const walletError = error as Error;
-        console.error('Wallet authentication specific error:', walletError);
-        toast.error(`Erro na autenticação: ${walletError.message || 'Tente novamente'}`);
-        throw walletError; // Re-throw to be caught by the outer catch
+        console.error('Wallet authentication error:', error);
+        toast.error('Erro na autenticação com carteira. Por favor, tente novamente.');
       }
     } catch (error) {
       console.error('Authentication error:', error);

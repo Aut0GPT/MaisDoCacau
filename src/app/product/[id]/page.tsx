@@ -1,22 +1,46 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { getProductById } from '@/data/products';
+import { getProductById, Product } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
 import { toast } from 'react-toastify';
 
 export default function ProductDetail() {
   const params = useParams();
   const [quantity, setQuantity] = useState(1);
-  const { addToCart, updateQuantity } = useCart();
+  const { addToCart } = useCart();
+  const [product, setProduct] = useState<Product | null>(null);
+  // Loading state used in useEffect
+  const [, setLoading] = useState(true);
+  const [stockAvailable, setStockAvailable] = useState(0);
   
   const productId = params.id as string;
-  const product = getProductById(productId);
+  
+  // Fetch product data from Supabase
+  useEffect(() => {
+    async function loadProduct() {
+      setLoading(true);
+      try {
+        const productData = await getProductById(productId);
+        setProduct(productData);
+        if (productData) {
+          setStockAvailable(productData.stock || 0);
+        }
+      } catch (error) {
+        console.error('Error loading product:', error);
+        toast.error('Erro ao carregar o produto. Por favor, tente novamente.');
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    loadProduct();
+  }, [productId]);
   
   if (!product) {
     return (
@@ -41,27 +65,36 @@ export default function ProductDetail() {
   // Function to handle adding to cart
   const handleAddToCart = () => {
     try {
+      // Check if there's enough stock available
+      if (stockAvailable <= 0) {
+        toast.error('Este produto está fora de estoque.');
+        return;
+      }
+      
+      if (quantity > stockAvailable) {
+        toast.warning(`Apenas ${stockAvailable} unidades disponíveis em estoque.`);
+        setQuantity(stockAvailable);
+        return;
+      }
+      
       // Check if the product is alcoholic and requires age verification
       if (product.containsAlcohol) {
         // In a real implementation, we would verify age with World ID
         // For now, just show a confirmation
         const isAdult = confirm('Este produto contém álcool. Você confirma que é maior de 18 anos?');
+        
         if (!isAdult) {
-          toast.error('Produto alcoólico - Venda proibida para menores de 18 anos');
-          return;
+          return; // Don't add to cart if not adult
         }
       }
-
-      // Add product to cart
-      addToCart(product);
       
-      // If quantity is more than 1, update the quantity
-      if (quantity > 1) {
-        updateQuantity(product.id, quantity);
-      }
+      // Add to cart and update stock in UI
+      addToCart(product, quantity);
+      setStockAvailable(prev => Math.max(0, prev - quantity));
+      toast.success(`${quantity} ${quantity > 1 ? 'unidades' : 'unidade'} de ${product.name} adicionado ao carrinho!`);
       
-      // Show success message
-      toast.success(`${product.name} adicionado ao carrinho! (${quantity} unidades)`);
+      // In a production app, we would update the stock in Supabase here
+      // updateProductStock(product.id, stockAvailable - quantity);
     } catch (error) {
       console.error('Error adding to cart:', error);
       toast.error('Erro ao adicionar produto ao carrinho. Tente novamente.');

@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { Product } from '@/components/ProductCard';
+import { Product } from '@/lib/products';
 
 interface CartItem {
   product: Product;
@@ -10,7 +10,7 @@ interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: Product) => void;
+  addToCart: (product: Product, quantity?: number) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -45,20 +45,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, isClient]);
 
-  const addToCart = (product: Product) => {
+  const addToCart = (product: Product, quantity: number = 1) => {
     setItems(prevItems => {
       const existingItem = prevItems.find(item => item.product.id === product.id);
       
       if (existingItem) {
-        // Increment quantity if product already in cart
-        return prevItems.map(item => 
-          item.product.id === product.id 
-            ? { ...item, quantity: item.quantity + 1 } 
+        // If product already in cart, increase quantity by the specified amount
+        return prevItems.map(item =>
+          item.product.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       } else {
-        // Add new item to cart
-        return [...prevItems, { product, quantity: 1 }];
+        // If product not in cart, add it with the specified quantity
+        return [...prevItems, { product, quantity }];
       }
     });
   };
