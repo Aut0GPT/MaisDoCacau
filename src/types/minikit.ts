@@ -7,7 +7,31 @@ export interface WalletAuthResponse {
   email?: string;
   worldId?: string;
   // Add any other known or expected properties, or use a more generic type if needed
-  [key: string]: any; // Allows for other properties not explicitly defined yet
+  [key: string]: unknown; // Allows for other properties not explicitly defined yet
+}
+
+// Base payload interface for MiniKit responses
+export interface BasePayload {
+  status: string;
+  [key: string]: unknown;
+}
+
+// Success payload from wallet authentication
+export interface WalletAuthSuccessPayload extends BasePayload {
+  status: 'success';
+  address: string;
+  username?: string;
+  verified?: boolean;
+  profileImage?: string;
+  email?: string;
+  worldId?: string;
+}
+
+// Error payload from MiniKit operations
+export interface ErrorPayload extends BasePayload {
+  status: 'error';
+  error_code: string;
+  error_message?: string;
 }
 
 export interface UserInfoResponse {
@@ -17,19 +41,34 @@ export interface UserInfoResponse {
   profilePictureUrl?: string;
   email?: string;
   worldId?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface WalletAuthInput {
   nonce: string;
-  [key: string]: any; // Allow for other potential parameters
+  [key: string]: unknown; // Allow for other potential parameters
 }
 
 export interface MiniKitCommands {
   walletAuth: (params: WalletAuthInput) => Promise<WalletAuthResponse | null | undefined>;
   // Define other MiniKit commands here if you use them, e.g.:
-  // verify: (params: any) => Promise<any>;
-  // pay: (params: any) => Promise<any>;
+  // verify: (params: Record<string, unknown>) => Promise<unknown>;
+  // pay: (params: Record<string, unknown>) => Promise<unknown>;
+}
+
+export interface ErrorPayload {
+  status: 'error';
+  error_code: string;
+  error_message?: string;
+}
+
+export interface WalletAuthSuccessPayload {
+  status: 'success';
+  address: string;
+  message: string;
+  signature: string;
+  nonce: string;
+  [key: string]: unknown;
 }
 
 export interface MiniKitGlobal {
@@ -37,7 +76,7 @@ export interface MiniKitGlobal {
   commands: MiniKitCommands;
   getUserInfo?: () => Promise<UserInfoResponse | null | undefined>;
   // Define other global MiniKit properties or methods if known
-  [key: string]: any; // Allows for other properties
+  [key: string]: unknown; // Allows for other properties
 }
 
 // This makes window.MiniKit available globally with the specified type
