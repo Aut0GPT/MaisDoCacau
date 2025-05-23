@@ -18,9 +18,11 @@ export default function WelcomeAuth({ onAuthenticated }: WelcomeAuthProps) {
   const handleAuthenticate = useCallback(async () => {
     try {
       setIsLoading(true);
+      console.log('Starting authentication process...');
       
       if (!isInstalled) {
-        toast.error('Este app precisa ser executado dentro do World App para funcionar corretamente.');
+        console.log('MiniKit not installed, using development mode authentication');
+        toast.info('Modo de desenvolvimento: autenticação simulada.');
         // For development, we'll allow skipping authentication
         setIsVisible(false);
         localStorage.setItem('hasAuthenticated', 'true');
@@ -28,19 +30,29 @@ export default function WelcomeAuth({ onAuthenticated }: WelcomeAuthProps) {
         return;
       }
       
+      console.log('MiniKit installed, proceeding with wallet authentication');
+      
       // Authenticate with wallet
-      await walletAuth();
-      
-      // Mark user as authenticated
-      localStorage.setItem('hasAuthenticated', 'true');
-      
-      // Hide welcome screen
-      setIsVisible(false);
-      
-      // Call the onAuthenticated callback
-      onAuthenticated();
-      
-      toast.success('Autenticação realizada com sucesso!');
+      try {
+        const authResult = await walletAuth();
+        console.log('Wallet authentication successful:', authResult);
+        
+        // Mark user as authenticated
+        localStorage.setItem('hasAuthenticated', 'true');
+        
+        // Hide welcome screen
+        setIsVisible(false);
+        
+        // Call the onAuthenticated callback
+        onAuthenticated();
+        
+        toast.success('Autenticação realizada com sucesso!');
+      } catch (error) {
+        const walletError = error as Error;
+        console.error('Wallet authentication specific error:', walletError);
+        toast.error(`Erro na autenticação: ${walletError.message || 'Tente novamente'}`);
+        throw walletError; // Re-throw to be caught by the outer catch
+      }
     } catch (error) {
       console.error('Authentication error:', error);
       toast.error('Erro na autenticação. Por favor, tente novamente.');

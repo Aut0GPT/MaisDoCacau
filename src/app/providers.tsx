@@ -13,10 +13,19 @@ export default function Providers({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setIsClient(true);
+    
+    // Check if user has already authenticated before
+    const hasAuthenticated = localStorage.getItem('hasAuthenticated');
+    if (hasAuthenticated) {
+      // Skip the welcome screen if user has already authenticated
+      setShowWelcome(false);
+    }
   }, []);
 
   const handleAuthenticated = () => {
+    console.log('Authentication completed, hiding welcome screen');
     setShowWelcome(false);
+    localStorage.setItem('hasAuthenticated', 'true');
   };
 
   return (
