@@ -61,7 +61,7 @@ export const walletAuth = async () => {
 
     // Sign in with next-auth using the wallet authentication result
     await signIn('credentials', {
-      redirectTo: '/home',
+      redirectTo: '/',
       nonce,
       signedNonce,
       finalPayloadJson: JSON.stringify(successPayload),

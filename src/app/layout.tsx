@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Poppins, Playfair_Display } from 'next/font/google';
 import './globals.css';
-import Providers from './providers';
+import Providers from '@/app/providers';
 
 const poppins = Poppins({
   variable: '--font-poppins',
