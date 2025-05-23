@@ -14,8 +14,7 @@ export default function ProductImage({ src, alt, priority = false, className = '
   const [isLoading, setIsLoading] = useState(true);
   const [imgSrc, setImgSrc] = useState(src);
   
-  // Check if the image is SVG
-  const isSvg = src.toLowerCase().endsWith('.svg');
+  // No need to check for SVG specifically as we handle all file types in handleError
 
   // Handle image error with multiple fallback options
   const handleError = () => {
