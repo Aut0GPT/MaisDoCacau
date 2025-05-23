@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useMiniKit } from '@worldcoin/minikit-js/minikit-provider';
 import { walletAuth } from '@/auth/wallet';
 import { toast } from 'react-toastify';
@@ -15,19 +15,7 @@ export default function WelcomeAuth({ onAuthenticated }: WelcomeAuthProps) {
   const { isInstalled } = useMiniKit();
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    // Check if user has already authenticated before
-    const hasAuthenticated = localStorage.getItem('hasAuthenticated');
-    if (!hasAuthenticated) {
-      // Show the welcome screen if user hasn't authenticated before
-      setIsVisible(true);
-    } else {
-      // Skip the welcome screen if user has already authenticated
-      onAuthenticated();
-    }
-  }, [onAuthenticated]);
-
-  const handleAuthenticate = async () => {
+  const handleAuthenticate = useCallback(async () => {
     try {
       setIsLoading(true);
       
@@ -59,14 +47,31 @@ export default function WelcomeAuth({ onAuthenticated }: WelcomeAuthProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isInstalled, onAuthenticated, setIsLoading, setIsVisible]);
 
-  const handleSkip = () => {
+  const handleSkip = useCallback(() => {
     // For development purposes, allow skipping
     setIsVisible(false);
     localStorage.setItem('hasAuthenticated', 'true');
     onAuthenticated();
-  };
+  }, [onAuthenticated, setIsVisible]);
+
+  useEffect(() => {
+    // Check if user has already authenticated before
+    const hasAuthenticated = localStorage.getItem('hasAuthenticated');
+    if (!hasAuthenticated) {
+      // Show the welcome screen if user hasn't authenticated before
+      setIsVisible(true);
+      
+      // Automatically attempt to authenticate if MiniKit is installed
+      if (isInstalled) {
+        handleAuthenticate();
+      }
+    } else {
+      // Skip the welcome screen if user has already authenticated
+      onAuthenticated();
+    }
+  }, [onAuthenticated, isInstalled, handleAuthenticate]);
 
   if (!isVisible) {
     return null;
