@@ -5,6 +5,9 @@ export interface MiniKitUser {
   walletAddress?: string;
   username?: string;
   profilePictureUrl?: string;
+  profileImage?: string; // Alternative profile image URL
+  email?: string; // User's email if available
+  worldId?: string; // World ID identifier
   permissions?: {
     notifications: boolean;
     contacts: boolean;
