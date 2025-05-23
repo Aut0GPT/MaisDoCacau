@@ -65,6 +65,7 @@ export default function Home() {
                       target.src = '/images/products/product-placeholder.svg';
                       console.log(`Image failed to load: ${product.image}, using placeholder`);
                     }}
+                    unoptimized
                   />
                 </div>
                 <div style={{ padding: '15px' }}>

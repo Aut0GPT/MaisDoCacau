@@ -128,6 +128,7 @@ export default function ProductDetail() {
                 const target = e.target as HTMLImageElement;
                 target.src = '/images/products/product-placeholder.svg';
               }}
+              unoptimized
             />
           </div>
           

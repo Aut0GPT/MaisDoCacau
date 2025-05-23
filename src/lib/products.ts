@@ -173,6 +173,7 @@ export async function updateProductStock(id: string, newStock: number) {
   return true;
 }
 
+
 // Seed initial products (for development)
 export async function seedInitialProducts() {
   const initialProducts = [

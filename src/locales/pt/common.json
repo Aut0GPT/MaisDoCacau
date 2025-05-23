@@ -11,9 +11,16 @@
   "categories": {
     "all": "Todos os Produtos",
     "delicacies": "Delícias & Doces",
-    "pantry": "Gourmet & Despensa",
-    "healthy": "Opções Saudáveis",
-    "spirits": "Cauchaça & Bebidas"
+    "beverages": "Bebidas & Chás",
+    "condiments": "Condimentos & Temperos",
+    "alcohol": "Cauchaça & Bebidas Alcoólicas"
+  },
+  "common": {
+    "back": "Voltar",
+    "backToHome": "Voltar para a página inicial",
+    "noProductsFound": "Nenhum produto encontrado nesta categoria.",
+    "viewDetails": "Ver Detalhes",
+    "productAdded": "adicionado ao carrinho!"
   },
   "product": {
     "addToCart": "Adicionar ao Carrinho",
