@@ -20,6 +20,7 @@ export interface BasePayload {
 export interface WalletAuthSuccessPayload extends BasePayload {
   status: 'success';
   address: string;
+  nonce: string; // Required for authentication verification
   username?: string;
   verified?: boolean;
   profileImage?: string;

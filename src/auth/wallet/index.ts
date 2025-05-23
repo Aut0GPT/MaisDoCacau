@@ -1,8 +1,8 @@
-import { MiniKit } from '@worldcoin/minikit-js';
+import { MiniKit, MiniAppWalletAuthSuccessPayload } from '@worldcoin/minikit-js';
 import { signIn } from 'next-auth/react';
 import { getNewNonces } from './server-helpers';
-import type { WalletAuthSuccessPayload } from '@/types/minikit';
 import { isErrorPayload } from '@/types/minikit-utils';
+import { WalletAuthSuccessPayload } from '@/types/minikit';
 
 /**
  * Authenticates a user via their wallet using a nonce-based challenge-response mechanism.
@@ -53,8 +53,17 @@ export const walletAuth = async () => {
       throw new Error('Authentication response has unexpected format');
     }
 
-    // Cast the finalPayload to the success type for TypeScript
-    const successPayload = result.finalPayload as WalletAuthSuccessPayload;
+    // First cast to the MiniKit type
+    const miniKitPayload = result.finalPayload as MiniAppWalletAuthSuccessPayload;
+    
+    // Then create a proper WalletAuthSuccessPayload with the nonce included
+    const successPayload: WalletAuthSuccessPayload = {
+      ...miniKitPayload,
+      status: 'success',
+      address: miniKitPayload.address || '',
+      // Add the nonce from our generated nonce
+      nonce: nonce
+    };
     
     // Log the successful authentication
     console.log('Authentication successful:', successPayload);
