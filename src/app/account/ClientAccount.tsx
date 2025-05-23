@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useMiniKit } from '@worldcoin/minikit-js/minikit-provider';
 import { walletAuth } from '@/auth/wallet';
 import { toast } from 'react-toastify';
+import Image from 'next/image';
 import type { MiniKitGlobal } from '@/types/minikit';
 
 interface User {
@@ -189,9 +189,11 @@ export default function ClientAccount() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex flex-col md:flex-row items-center mb-6">
               {user.profileImage ? (
-                <img 
+                <Image 
                   src={user.profileImage} 
-                  alt={user.username} 
+                  alt={user.username}
+                  width={96}
+                  height={96}
                   className="rounded-full h-24 w-24 object-cover border-4 border-[var(--color-accent)]"
                 />
               ) : (
@@ -340,7 +342,7 @@ export default function ClientAccount() {
                 <div className="p-3">
                   <div className="flex items-center">
                     <div className="w-16 h-16 bg-gray-100 rounded-md flex items-center justify-center">
-                      <img src="/images/products/cauchaça.jpg" alt="Cauchaça" className="w-12 h-12 object-contain" />
+                      <Image src="/images/products/cauchaça.jpg" alt="Cauchaça" width={48} height={48} className="w-12 h-12 object-contain" />
                     </div>
                     <div className="ml-3">
                       <div className="font-medium">Cauchaça Original - 700ml</div>
