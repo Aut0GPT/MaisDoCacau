@@ -1,8 +1,8 @@
-## Create a Mini App
+# Mais do Cacau - World MiniApp
 
 [Mini apps](https://docs.worldcoin.org/mini-apps) enable third-party developers to create native-like applications within World App.
 
-This template is a way for you to quickly get started with authentication and examples of some of the trickier commands.
+This Mais do Cacau MiniApp showcases authentic cacau products from Bahia, Brazil, with full Supabase integration for user authentication and product inventory management.
 
 ## Getting Started
 
@@ -22,7 +22,20 @@ This starter kit uses [Minikit's](https://github.com/worldcoin/minikit-js) walle
 
 ## UI Library
 
-This starter kit uses [Mini Apps UI Kit](https://github.com/worldcoin/mini-apps-ui-kit) to style the app. We recommend using the UI kit to make sure you are compliant with [World App's design system](https://docs.world.org/mini-apps/design/app-guidelines).
+This app uses [Mini Apps UI Kit](https://github.com/worldcoin/mini-apps-ui-kit) to style the app, ensuring compliance with [World App's design system](https://docs.world.org/mini-apps/design/app-guidelines).
+
+## Supabase Integration
+
+This app uses Supabase for database and authentication:
+
+1. User profiles are stored in Supabase, linked to wallet addresses
+2. Product inventory with stock management is implemented
+3. A demonstration notes page shows how to fetch and display data from Supabase
+
+To set up the database:
+1. Create a Supabase project
+2. Run the `supabase-setup.sql` script in the SQL Editor
+3. Update the environment variables in `.env.local`
 
 ## Eruda
 
