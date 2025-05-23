@@ -7,10 +7,15 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useAuth } from '@/context/AuthContext';
+import { walletAuth } from '@/auth/wallet';
+import { toast } from 'react-toastify';
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
     async function loadProducts() {
@@ -36,7 +41,46 @@ export default function Home() {
         
         <div style={{ backgroundColor: '#6b4226', color: 'white', padding: '40px', borderRadius: '8px', marginBottom: '30px', textAlign: 'center' }}>
           <h2 style={{ fontSize: '28px', marginBottom: '15px' }}>Produtos artesanais e gourmet de cacau</h2>
-          <p style={{ fontSize: '18px' }}>Descubra delícias à base de cacau</p>
+          
+          {isAuthenticated && user ? (
+            <div style={{ margin: '15px 0', backgroundColor: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '6px' }}>
+              <p style={{ fontSize: '18px', fontWeight: 'bold' }}>Bem-vindo, {user.username}!</p>
+              <p style={{ fontSize: '14px', marginTop: '5px' }}>Aproveite nossas delícias exclusivas de cacau</p>
+            </div>
+          ) : (
+            <div style={{ margin: '15px 0' }}>
+              <button 
+                onClick={async () => {
+                  try {
+                    setIsAuthenticating(true);
+                    await walletAuth();
+                  } catch (error) {
+                    console.error('Authentication failed:', error);
+                    toast.error('Falha na autenticação. Tente novamente.');
+                  } finally {
+                    setIsAuthenticating(false);
+                  }
+                }}
+                disabled={isAuthenticating}
+                style={{
+                  backgroundColor: '#FFF',
+                  color: '#6b4226',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '10px 20px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  cursor: isAuthenticating ? 'default' : 'pointer',
+                  opacity: isAuthenticating ? 0.7 : 1,
+                  marginBottom: '15px',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {isAuthenticating ? 'Autenticando...' : 'Login com World ID'}
+              </button>
+              <p style={{ fontSize: '18px' }}>Descubra delícias à base de cacau</p>
+            </div>
+          )}
         </div>
 
         <h2 style={{ color: '#6b4226', fontSize: '24px', marginBottom: '20px' }}>Nossos Produtos</h2>
