@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useMiniKit } from '@worldcoin/minikit-js/minikit-provider';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth, User } from '@/context/AuthContext';
+import type { MiniKitGlobal } from '@/types/minikit';
 
 export default function ClientAccount() {
   // Hardcoded translations since i18n setup is missing
@@ -23,7 +24,7 @@ export default function ClientAccount() {
   };
   
   // Use the global auth context instead of local state
-  const { user, isLoading, logout } = useAuth();
+  const { user, isLoading, login, logout } = useAuth();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
@@ -58,24 +59,63 @@ export default function ClientAccount() {
     setIsAuthenticating(true);
     setError(null);
     console.log('Starting authentication process...');
-    
+
     try {
-      if (!isInstalled) {
-        // If MiniKit is not installed, show error message
-        console.log('MiniKit not installed, using development mode authentication');
-        toast.info('Modo de desenvolvimento: autenticação simulada.');
-        
-        // Redirect to home page which will show the welcome auth screen
-        window.location.href = '/';
+      if (!isInstalled || typeof window === 'undefined' || !window.MiniKit) {
+        console.log('MiniKit not installed or not available, redirecting for development mode authentication');
+        toast.info('MiniKit não detectado. Redirecionando para login de desenvolvimento.');
+        // Redirect to home page which might have a dev login/mockup
+        window.location.href = '/'; 
       } else {
         console.log('MiniKit installed, proceeding with wallet authentication');
         
-        // Redirect to home page which will show the welcome auth screen
-        window.location.href = '/';
+        // Ensure MiniKit commands are available
+        if (!(window.MiniKit as MiniKitGlobal).commands?.walletAuth) {
+          throw new Error('MiniKit walletAuth command is not available.');
+        }
+
+        // According to MiniKit docs, walletAuth requires a nonce parameter
+        // Generate a random nonce for the authentication request
+        const nonce = Math.random().toString(36).substring(2, 15);
+        const authResponse = await (window.MiniKit as MiniKitGlobal).commands.walletAuth({ nonce });
+        console.log('MiniKit walletAuth response:', authResponse);
+
+        // Explicitly type check the response to avoid 'void' or 'never' type issues
+        if (authResponse && typeof authResponse === 'object') {
+          // Use type assertion to help TypeScript understand the structure
+          const response = authResponse as {
+            address?: string;
+            username?: string;
+            verified?: boolean;
+            profileImage?: string;
+            profilePictureUrl?: string;
+            email?: string;
+            worldId?: string;
+          };
+          
+          if (response.address) {
+            const userData: User = {
+              address: response.address,
+              username: response.username || `User_${response.address.substring(0, 6)}`,
+              verified: response.verified || false,
+              profileImage: response.profileImage || response.profilePictureUrl,
+              email: response.email,
+              worldId: response.worldId
+            };
+            
+            // Call the login function from AuthContext
+            await login(userData); // login is from useAuth()
+            toast.success('Autenticado com sucesso via MiniKit!');
+          } else {
+            throw new Error('Authentication response missing wallet address');
+          }
+        } else {
+          throw new Error('Authentication with MiniKit failed or returned invalid response');
+        }
       }
     } catch (err) {
       const error = err as Error;
-      setError('Ocorreu um erro durante a autenticação. Por favor, tente novamente.');
+      setError(`Ocorreu um erro durante a autenticação: ${error.message}`);
       console.error('Authentication error:', error);
       toast.error(`Erro na autenticação: ${error.message || 'Tente novamente'}`);
     } finally {
