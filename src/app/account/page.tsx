@@ -59,9 +59,9 @@ export default function AccountPage() {
         <div className="bg-gradient-to-r from-amber-800 to-amber-600 text-white rounded-lg shadow-md p-6 mb-6">
           <div className="flex flex-col md:flex-row items-center md:items-start">
             <div className="w-24 h-24 bg-white rounded-full overflow-hidden border-4 border-white shadow-md mb-4 md:mb-0">
-              {user.profilePictureUrl ? (
+              {user.profileImage ? (
                 <Image 
-                  src={user.profilePictureUrl} 
+                  src={user.profileImage} 
                   alt={user.username || 'Perfil'} 
                   width={96} 
                   height={96} 
