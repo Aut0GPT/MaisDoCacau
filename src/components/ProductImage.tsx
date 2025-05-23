@@ -17,15 +17,31 @@ export default function ProductImage({ src, alt, priority = false, className = '
   // Check if the image is SVG
   const isSvg = src.toLowerCase().endsWith('.svg');
 
-  // Handle image error
+  // Handle image error with multiple fallback options
   const handleError = () => {
-    // If SVG fails, try falling back to JPG version
-    if (isSvg) {
-      const jpgPath = src.replace('.svg', '.jpg');
-      console.log(`Trying fallback image: ${jpgPath}`);
+    // If current image fails, try different file extensions
+    const currentExt = imgSrc.split('.').pop()?.toLowerCase();
+    
+    if (currentExt === 'svg') {
+      // Try PNG first
+      const pngPath = imgSrc.replace(/\.svg$/i, '.png');
+      console.log(`Trying PNG fallback: ${pngPath}`);
+      setImgSrc(pngPath);
+    } else if (currentExt === 'png') {
+      // Try JPG next
+      const jpgPath = imgSrc.replace(/\.png$/i, '.jpg');
+      console.log(`Trying JPG fallback: ${jpgPath}`);
       setImgSrc(jpgPath);
+    } else if (currentExt === 'jpg') {
+      // Finally try the placeholder
+      console.log('Using placeholder image');
+      setImgSrc('/images/products/product-placeholder.svg');
+      setIsLoading(false);
+    } else {
+      // If all fails or unknown extension, use placeholder
+      setImgSrc('/images/products/product-placeholder.svg');
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   // Reset loading state when src changes
