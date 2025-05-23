@@ -31,7 +31,7 @@ export default function Providers({ children }: { children: ReactNode }) {
   };
 
   return (
-    <MiniKitProvider>
+    <MiniKitProvider props={{ appId: "app_staging_e2e6b2f2d0c0c0d5b7c1e1e6f1d8e9e3" }}>
       <AuthProvider>
         <DeliveryProvider>
           <CartProvider>

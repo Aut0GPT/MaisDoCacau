@@ -117,16 +117,16 @@ export default function ProductDetail() {
         
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '32px', marginBottom: '32px' }}>
           {/* Product Image */}
-          <div style={{ height: '300px', backgroundColor: '#f9f5eb', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', position: 'relative' }}>
-            <Image 
-              src={product.image} 
-              alt={product.name} 
-              width={300}
-              height={300}
-              style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
-              onError={() => {
-                // Log error for debugging
-                console.log(`Image failed to load: ${product.image}`);
+          <div style={{ borderRadius: '8px', overflow: 'hidden', position: 'relative', paddingBottom: '100%', backgroundColor: '#f9f5eb' }}>
+            <Image
+              src={product.image || '/images/products/product-placeholder.svg'}
+              alt={product.name}
+              fill
+              style={{ objectFit: 'contain' }}
+              onError={(e) => {
+                // If image fails to load, replace with a placeholder
+                const target = e.target as HTMLImageElement;
+                target.src = '/images/products/product-placeholder.svg';
               }}
             />
           </div>
@@ -237,7 +237,7 @@ export default function ProductDetail() {
             <div style={{ marginBottom: '24px' }}>
               <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#6b4226', marginBottom: '8px' }}>Detalhes</h2>
               <ul style={{ paddingLeft: '20px', color: '#4b5563' }}>
-                <li>Peso/Volume: {product.weight}</li>
+                {product.weight && <li>Peso/Volume: {product.weight}</li>}
                 <li>Categoria: {product.category}</li>
                 {product.containsAlcohol && (
                   <li style={{ color: '#b91c1c' }}>Contém álcool - Venda proibida para menores de 18 anos</li>

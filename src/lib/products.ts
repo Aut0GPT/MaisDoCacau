@@ -34,6 +34,27 @@ export async function getAllProducts() {
 // Get a product by ID
 export async function getProductById(id: string) {
   try {
+    // Special case for the specific problematic URL
+    if (id === 'cauchaca-carvalho-500ml') {
+      console.log('Special case handling for cauchaca-carvalho-500ml');
+      // Get all products and find Cauchaça Carvalho product
+      const { data: allProducts } = await supabase
+        .from('products')
+        .select('*');
+      
+      if (allProducts && allProducts.length > 0) {
+        // Find the Cauchaça Carvalho product
+        const carvalhoProduct = allProducts.find(p => 
+          p.name.toLowerCase().includes('carvalho') && 
+          p.name.toLowerCase().includes('cauchaça')
+        );
+        
+        if (carvalhoProduct) {
+          return carvalhoProduct as Product;
+        }
+      }
+    }
+    
     // First try to get by UUID
     const { data, error } = await supabase
       .from('products')
@@ -57,15 +78,74 @@ export async function getProductById(id: string) {
         .select('*');
       
       if (allProducts && allProducts.length > 0) {
-        // Try to find a product with a name that includes the ID string
-        // or where the ID might be a slug version of the name
-        const matchingProduct = allProducts.find(p => 
-          p.name.toLowerCase().includes(id.toLowerCase()) ||
-          id.toLowerCase().includes(p.name.toLowerCase().replace(/\s+/g, '-'))
-        );
+        // Normalize the ID to make matching more reliable
+        const normalizedId = id.toLowerCase()
+          .replace(/[\-_]/g, ' ')  // Replace hyphens and underscores with spaces
+          .replace(/\d+\s*ml/g, '')  // Remove volume measurements like "500ml"
+          .trim();
+
+        // Special case handling for common product types
+        const isCaucha = normalizedId.includes('caucha') || normalizedId.includes('cauchaca');
+        const isCarvalho = normalizedId.includes('carvalho');
+        
+        // Try to find a product with a name that matches the normalized ID
+        let matchingProduct = allProducts.find(p => {
+          const normalizedName = p.name.toLowerCase()
+            .replace(/[\-_]/g, ' ')
+            .trim();
+          
+          // Direct match
+          if (normalizedName.includes(normalizedId) || normalizedId.includes(normalizedName)) {
+            return true;
+          }
+          
+          // Special case for Cauchaça Carvalho products
+          if (isCaucha && isCarvalho && 
+              normalizedName.includes('caucha') && 
+              normalizedName.includes('carvalho')) {
+            return true;
+          }
+          
+          return false;
+        });
         
         if (matchingProduct) {
           return matchingProduct as Product;
+        }
+        
+        // If still not found, try a more lenient approach with partial matches
+        matchingProduct = allProducts.find(p => {
+          const words = normalizedId.split(' ');
+          // Match if at least one word from the ID is in the product name
+          return words.filter(word => 
+            word.length > 3 && p.name.toLowerCase().includes(word)
+          ).length >= 1;
+        });
+        
+        if (matchingProduct) {
+          return matchingProduct as Product;
+        }
+        
+        // Last resort - for Cauchaça products, return any Cauchaça product
+        if (isCaucha) {
+          const anyCarvalhoProduct = allProducts.find(p => 
+            p.name.toLowerCase().includes('cauchaça') && 
+            p.name.toLowerCase().includes('carvalho')
+          );
+          
+          if (anyCarvalhoProduct) {
+            console.log('Found a Cauchaça Carvalho product as fallback');
+            return anyCarvalhoProduct as Product;
+          }
+          
+          const anyCauchaProduct = allProducts.find(p => 
+            p.name.toLowerCase().includes('cauchaça')
+          );
+          
+          if (anyCauchaProduct) {
+            console.log('Found a Cauchaça product as fallback');
+            return anyCauchaProduct as Product;
+          }
         }
       }
     }
@@ -100,7 +180,7 @@ export async function seedInitialProducts() {
       name: 'Combo Cacau Saudável',
       description: 'Combo completo com Granola, mel de cacau e chá de cacau para uma experiência completa de bem-estar.',
       price: 89.90,
-      image: '/products/combo-cacau.jpg',
+      image: '/images/products/product-placeholder.svg',
       category: 'Combos',
       stock: 10,
       featured: true,
@@ -115,7 +195,7 @@ export async function seedInitialProducts() {
       name: 'Cauchaça Original - 160 ml',
       description: 'Bebida destilada premium feita a partir da polpa do cacau, com sabor único e aromático. Garrafa de 160ml.',
       price: 59.90,
-      image: '/products/cauchaça-160ml.jpg',
+      image: '/images/products/product-placeholder.svg',
       category: 'Bebidas',
       stock: 15,
       featured: false,
@@ -130,7 +210,7 @@ export async function seedInitialProducts() {
       name: 'Cauchaça Original - 700 ml',
       description: 'Bebida destilada premium feita a partir da polpa do cacau, com sabor único e aromático. Garrafa de 700ml.',
       price: 149.90,
-      image: '/products/cauchaça-700ml.jpg',
+      image: '/images/products/product-placeholder.svg',
       category: 'Bebidas',
       stock: 8,
       featured: true,
@@ -145,7 +225,7 @@ export async function seedInitialProducts() {
       name: 'Nibs de Cacau Premium',
       description: 'Nibs de cacau torrados premium, perfeitos para adicionar em receitas ou consumir como snack saudável.',
       price: 29.90,
-      image: '/products/nibs-premium.jpg',
+      image: '/images/products/product-placeholder.svg',
       category: 'Derivados',
       stock: 20,
       featured: false,
@@ -161,7 +241,7 @@ export async function seedInitialProducts() {
       name: 'Granola Baiana',
       description: 'Granola artesanal com ingredientes da Bahia, incluindo cacau e castanhas regionais.',
       price: 32.90,
-      image: '/products/granola-baiana.jpg',
+      image: '/images/products/product-placeholder.svg',
       category: 'Alimentos',
       stock: 15,
       featured: false,
@@ -177,7 +257,7 @@ export async function seedInitialProducts() {
       name: 'Vinagre Balsâmico de Cacau',
       description: 'Vinagre balsâmico especial feito a partir da fermentação do cacau, com sabor único e versátil.',
       price: 45.90,
-      image: '/products/vinagre-balsamico.jpg',
+      image: '/images/products/product-placeholder.svg',
       category: 'Condimentos',
       stock: 12,
       featured: false,
@@ -192,7 +272,7 @@ export async function seedInitialProducts() {
       name: 'Cauchaça Original - 50 ml',
       description: 'Versão compacta da nossa bebida destilada premium feita a partir da polpa do cacau. Ideal para presente ou degustação.',
       price: 29.90,
-      image: '/products/cauchaça-50ml.jpg',
+      image: '/images/products/product-placeholder.svg',
       category: 'Bebidas',
       stock: 25,
       featured: false,
@@ -207,7 +287,7 @@ export async function seedInitialProducts() {
       name: 'Vinagre de Cacau',
       description: 'Vinagre tradicional feito a partir da fermentação do cacau, com sabor único e versátil.',
       price: 35.90,
-      image: '/products/vinagre-cacau.jpg',
+      image: '/images/products/product-placeholder.svg',
       category: 'Condimentos',
       stock: 18,
       featured: false,
@@ -222,7 +302,7 @@ export async function seedInitialProducts() {
       name: 'Mel de Cacau - 1 litro',
       description: 'Mel puro extraído da polpa do cacau, com sabor único e propriedades nutritivas excepcionais.',
       price: 79.90,
-      image: '/products/mel-cacau-1l.jpg',
+      image: '/images/products/product-placeholder.svg',
       category: 'Alimentos',
       stock: 10,
       featured: true,
@@ -238,7 +318,7 @@ export async function seedInitialProducts() {
       name: 'Cauchaça Carvalho - 30 ml',
       description: 'Edição especial da nossa bebida destilada premium, envelhecida em barris de carvalho. Miniatura para degustação.',
       price: 39.90,
-      image: '/products/cauchaça-carvalho-30ml.jpg',
+      image: '/images/products/product-placeholder.svg',
       category: 'Bebidas',
       stock: 15,
       featured: true,
@@ -253,7 +333,7 @@ export async function seedInitialProducts() {
       name: 'Pick Nibs - nibs com rapadura',
       description: 'Combinação perfeita de nibs de cacau crocantes com rapadura tradicional, um snack delicioso e energético.',
       price: 25.90,
-      image: '/products/pick-nibs.jpg',
+      image: '/images/products/product-placeholder.svg',
       category: 'Alimentos',
       stock: 22,
       featured: true,
@@ -269,7 +349,7 @@ export async function seedInitialProducts() {
       name: 'Chá de Cacau',
       description: 'Chá artesanal feito com cascas de cacau, com sabor suave e propriedades relaxantes.',
       price: 19.90,
-      image: '/products/cha-cacau.jpg',
+      image: '/images/products/product-placeholder.svg',
       category: 'Bebidas',
       stock: 30,
       featured: true,

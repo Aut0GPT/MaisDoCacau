@@ -16,7 +16,11 @@ export default function Header() {
             alt="Mais do Cacau Logo" 
             width={100} 
             height={33} 
-            style={{ objectFit: 'contain' }}
+            style={{ height: 'auto', width: 'auto', maxWidth: '100px', objectFit: 'contain' }}
+            onError={() => {
+              // If logo fails to load, use text fallback
+              console.log('Logo failed to load');
+            }}
           />
         </Link>
 

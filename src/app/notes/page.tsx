@@ -12,7 +12,7 @@ export default function Notes() {
   
   const supabase = createClient();
   
-  useEffect(() => {  // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
     async function fetchNotes() {
       try {
         setLoading(true);
@@ -37,7 +37,7 @@ export default function Notes() {
     }
     
     fetchNotes();
-  }, []);
+  }, [supabase]);
   
   return (
     <div className="flex flex-col min-h-screen">
