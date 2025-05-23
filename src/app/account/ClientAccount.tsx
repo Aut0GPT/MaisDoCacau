@@ -2,20 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useMiniKit } from '@worldcoin/minikit-js/minikit-provider';
-import { walletAuth } from '@/auth/wallet';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
-import type { MiniKitGlobal } from '@/types/minikit';
-
-interface User {
-  address: string;
-  username: string;
-  verified: boolean;
-  profileImage?: string;
-  email?: string;
-  worldId?: string;
-}
 
 export default function ClientAccount() {
   // Hardcoded translations since i18n setup is missing
@@ -34,7 +23,7 @@ export default function ClientAccount() {
   };
   
   // Use the global auth context instead of local state
-  const { user, isAuthenticated, isLoading, logout } = useAuth();
+  const { user, isLoading, logout } = useAuth();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
