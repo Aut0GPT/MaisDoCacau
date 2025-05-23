@@ -3,6 +3,7 @@
 import { ReactNode, useState, useEffect } from 'react';
 import { CartProvider } from '@/context/CartContext';
 import { AuthProvider } from '@/context/AuthContext';
+import { DeliveryProvider } from '@/context/DeliveryContext';
 import { ToastContainer } from 'react-toastify';
 import { MiniKitProvider } from '@worldcoin/minikit-js/minikit-provider';
 import WelcomeAuth from '@/components/WelcomeAuth';
@@ -32,24 +33,26 @@ export default function Providers({ children }: { children: ReactNode }) {
   return (
     <MiniKitProvider>
       <AuthProvider>
-        <CartProvider>
-          {isClient && showWelcome && (
-            <WelcomeAuth onAuthenticated={handleAuthenticated} />
-          )}
-          {children}
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
-        </CartProvider>
+        <DeliveryProvider>
+          <CartProvider>
+            {isClient && showWelcome && (
+              <WelcomeAuth onAuthenticated={handleAuthenticated} />
+            )}
+            {children}
+            <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
+          </CartProvider>
+        </DeliveryProvider>
       </AuthProvider>
     </MiniKitProvider>
   );

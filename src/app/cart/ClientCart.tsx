@@ -2,10 +2,14 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-toastify';
 
 export default function ClientCart() {
+  const router = useRouter();
+  const { user } = useAuth();
   const { items, removeFromCart, updateQuantity, clearCart, subtotal } = useCart();
 
   const handleRemoveItem = (productId: string) => {
@@ -26,8 +30,19 @@ export default function ClientCart() {
   };
 
   const handleCheckout = () => {
-    toast.info('Funcionalidade de checkout em desenvolvimento');
-    // Here you would integrate with MiniKit payment functionality
+    if (!user) {
+      toast.warning('Por favor, faça login para continuar com a compra');
+      router.push('/');
+      return;
+    }
+    
+    if (items.length === 0) {
+      toast.warning('Seu carrinho está vazio');
+      return;
+    }
+    
+    // Redirect to checkout page
+    router.push('/checkout');
   };
 
   return (
