@@ -52,7 +52,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           // If no stored user but MiniKit is available, try to get user info
           try {
             if ('getUserInfo' in window.MiniKit) {
-              const userInfo = await (window.MiniKit as MiniKitGlobal).getUserInfo();
+              // Check if getUserInfo is defined before calling it
+              const getUserInfoFn = (window.MiniKit as MiniKitGlobal).getUserInfo;
+              if (!getUserInfoFn) {
+                throw new Error('getUserInfo method is not available');
+              }
+              
+              const userInfo = await getUserInfoFn();
               if (userInfo && userInfo.username) {
                 const userData: User = {
                   address: userInfo.walletAddress || '0x0000',

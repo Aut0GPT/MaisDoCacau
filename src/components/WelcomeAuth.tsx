@@ -57,7 +57,13 @@ export default function WelcomeAuth({ onAuthenticated }: WelcomeAuthProps) {
         // Get user info from MiniKit
         try {
           if (typeof window !== 'undefined' && window.MiniKit && 'getUserInfo' in window.MiniKit) {
-            const userInfo = await (window.MiniKit as MiniKitGlobal).getUserInfo();
+            // Check if getUserInfo is defined before calling it
+            const getUserInfoFn = (window.MiniKit as MiniKitGlobal).getUserInfo;
+            if (!getUserInfoFn) {
+              throw new Error('getUserInfo method is not available');
+            }
+            
+            const userInfo = await getUserInfoFn();
             console.log('User info from MiniKit:', userInfo);
             
             if (userInfo) {
