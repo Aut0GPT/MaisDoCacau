@@ -18,7 +18,8 @@ export const metadata: Metadata = {
   title: 'Mais do Cacau Emporium',
   description: 'Delícias à Base do Cacau - Produtos artesanais e gourmet de cacau',
   icons: {
-    icon: '/favicon.ico',
+    icon: '/favicon.png',
+    apple: '/favicon.png',
   },
 };
 

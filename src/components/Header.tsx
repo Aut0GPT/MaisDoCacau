@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,8 +10,14 @@ export default function Header() {
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: '#fff8e7', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', fontWeight: 'bold', fontSize: '24px', color: '#6b4226', textDecoration: 'none' }}>
-          Mais do Cacau
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+          <Image 
+            src="/images/MaisDocacauLOGO.png" 
+            alt="Mais do Cacau Logo" 
+            width={150} 
+            height={50} 
+            style={{ objectFit: 'contain' }}
+          />
         </Link>
 
         {/* Mobile menu button - only visible on small screens */}

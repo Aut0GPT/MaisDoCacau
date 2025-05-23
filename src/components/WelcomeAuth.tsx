@@ -94,13 +94,13 @@ export default function WelcomeAuth({ onAuthenticated }: WelcomeAuthProps) {
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
         <div className="flex justify-center mb-4">
           <Image 
-            src="/images/products/ChadeCacau30gpartedafrente.png" 
-            alt="Mais do Cacau" 
-            width={120} 
-            height={120} 
-            className="rounded-full bg-amber-50 p-2"
+            src="/images/MaisDocacauLOGO.png" 
+            alt="Mais do Cacau Logo" 
+            width={180} 
+            height={60} 
+            className="bg-amber-50 p-2"
             onError={() => {
-              console.log('Product image failed to load');
+              console.log('Logo image failed to load');
             }}
           />
         </div>
