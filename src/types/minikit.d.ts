@@ -1,69 +1,101 @@
 // Type definitions for MiniKit global object
 
-interface MiniKitUserInfo {
-  username: string;
-  walletAddress: string;
-  verified?: boolean;
+// User information as defined in the documentation
+export interface MiniKitUser {
+  walletAddress?: string;
+  username?: string;
+  profilePictureUrl?: string;
+  permissions?: {
+    notifications: boolean;
+    contacts: boolean;
+  };
+  optedIntoOptionalAnalytics?: boolean;
+  worldAppVersion?: number;
+  deviceOS?: string;
 }
 
-interface WalletAuthParams {
+// Wallet Auth input parameters
+export interface WalletAuthInput {
   nonce: string;
-  expirationTime: Date;
-  notBefore: Date;
-  statement: string;
+  expirationTime?: Date;
+  statement?: string;
+  requestId?: string;
+  notBefore?: Date;
 }
 
-interface VerifyParams {
+// Verify input parameters
+export interface VerifyInput {
   action: string;
   signal?: string;
 }
 
-interface PayParams {
+// Pay input parameters
+export interface PayInput {
   recipient: string;
   amount: number;
   token: string;
 }
 
-interface TransactionParams {
+// Transaction input parameters
+export interface TransactionInput {
   to: string;
   data: string;
   value?: string;
 }
 
-interface CommandResponse {
-  status: string;
-  error_code?: string;
-  address?: string;
-  [key: string]: unknown;
+// Wallet Auth success response
+export interface WalletAuthSuccessPayload {
+  status: 'success';
+  message: string;
+  signature: string;
+  address: string;
+  version: number;
 }
 
-interface FinalPayload {
-  status: string;
-  error_code?: string;
-  address?: string;
-  [key: string]: unknown;
+// Error response
+export interface ErrorPayload {
+  status: 'error';
+  error_code: string;
+  error_message?: string;
 }
 
-interface CommandResult {
-  finalPayload: FinalPayload;
+// Type guard to check if payload is an error
+export function isErrorPayload(payload: unknown): payload is ErrorPayload;
+
+// Command result with payload
+export interface CommandResult<T> {
+  commandPayload?: unknown;
+  finalPayload: T | ErrorPayload;
 }
 
+// MiniKit global interface
 export interface MiniKitGlobal {
-  getUserInfo: () => Promise<MiniKitUserInfo>;
-  getUserByUsername: (username: string) => Promise<MiniKitUserInfo>;
+  // User information
+  walletAddress?: string;
+  
+  // User methods
+  getUserInfo: () => Promise<MiniKitUser>;
+  getUserByUsername: (username: string) => Promise<MiniKitUser>;
+  getUserByAddress: (address: string) => Promise<MiniKitUser>;
+  
+  // Async commands
   commandsAsync: {
-    walletAuth: (params: WalletAuthParams) => Promise<CommandResult>;
-    verify: (params: VerifyParams) => Promise<CommandResult>;
-    pay: (params: PayParams) => Promise<CommandResult>;
-    sendTransaction: (params: TransactionParams) => Promise<CommandResult>;
+    walletAuth: (params: WalletAuthInput) => Promise<CommandResult<WalletAuthSuccessPayload>>;
+    verify: (params: VerifyInput) => Promise<CommandResult<unknown>>;
+    pay: (params: PayInput) => Promise<CommandResult<unknown>>;
+    sendTransaction: (params: TransactionInput) => Promise<CommandResult<unknown>>;
     getPermissions: () => Promise<Record<string, boolean>>;
   };
+  
+  // Regular commands
   commands: {
-    walletAuth: (params: WalletAuthParams) => void;
-    verify: (params: VerifyParams) => void;
-    pay: (params: PayParams) => void;
-    sendTransaction: (params: TransactionParams) => void;
+    walletAuth: (params: WalletAuthInput) => void;
+    verify: (params: VerifyInput) => void;
+    pay: (params: PayInput) => void;
+    sendTransaction: (params: TransactionInput) => void;
   };
+  
+  // Utility methods
   isInstalled: () => boolean;
 }
 
